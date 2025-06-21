@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 03:00:15 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 03:20:32 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,12 +42,15 @@ CORE_SRCS = main.c \
 			game/init_utils.c \
 			game/game_loop.c \
 			game/movement.c \
+			game/movement_utils.c \
 			game/cleanup.c \
 			render/raycasting.c \
 			render/draw.c \
 			render/draw_utils.c \
 			render/texture.c \
 			render/texture_utils.c \
+			render/minimap.c \
+			render/minimap_utils.c \
 			utils/error.c \
 			utils/math.c \
 			utils/libft_utils.c

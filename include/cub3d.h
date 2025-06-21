@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 03:04:39 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 03:39:24 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,21 @@
 /* Movement and rotation speed */
 # define MOVE_SPEED 0.05
 # define ROT_SPEED 0.03
+
+/* Bonus features */
+# define COLLISION_RADIUS 0.2
+# define MINIMAP_SIZE 200
+# define MINIMAP_SCALE 8.0
+
+/* Minimap structure */
+typedef struct s_minimap
+{
+	int		x;
+	int		y;
+	int		size;
+	double	scale;
+	int		player_size;
+}	t_minimap;
 
 /* Colors */
 typedef struct s_color
@@ -134,6 +149,7 @@ typedef struct s_game
 	int			endian;
 	t_scene		scene;
 	int			keys[256];
+	t_minimap	minimap;
 }	t_game;
 
 /* Function prototypes */
@@ -192,5 +208,15 @@ void			platform_cleanup(t_game *game);
 int				platform_handle_keypress(int keycode, t_game *game);
 int				platform_handle_keyrelease(int keycode, t_game *game);
 int				platform_close_window(t_game *game);
+
+/* Bonus features */
+int				check_collision(t_game *game, double x, double y);
+void			init_minimap(t_game *game);
+void			draw_minimap(t_game *game);
+void			draw_minimap_walls(t_game *game);
+void			draw_minimap_player(t_game *game);
+void			draw_minimap_square(t_game *game, int x, int y, int size);
+void			draw_minimap_square_color(t_game *game, int x, int y,
+					int color);
 
 #endif

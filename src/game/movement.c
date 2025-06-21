@@ -6,24 +6,11 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 02:54:40 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 03:27:25 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
-
-static int	is_wall(t_game *game, double x, double y)
-{
-	int	map_x;
-	int	map_y;
-
-	map_x = (int)x;
-	map_y = (int)y;
-	if (map_x < 0 || map_x >= game->scene.map_width
-		|| map_y < 0 || map_y >= game->scene.map_height)
-		return (1);
-	return (game->scene.map[map_y][map_x] == '1');
-}
 
 static void	move_forward_backward(t_game *game, int forward)
 {
@@ -37,9 +24,9 @@ static void	move_forward_backward(t_game *game, int forward)
 		dir_factor = -MOVE_SPEED;
 	new_x = game->scene.player.pos.x + game->scene.player.dir.x * dir_factor;
 	new_y = game->scene.player.pos.y + game->scene.player.dir.y * dir_factor;
-	if (!is_wall(game, new_x, game->scene.player.pos.y))
+	if (!check_collision(game, new_x, game->scene.player.pos.y))
 		game->scene.player.pos.x = new_x;
-	if (!is_wall(game, game->scene.player.pos.x, new_y))
+	if (!check_collision(game, game->scene.player.pos.x, new_y))
 		game->scene.player.pos.y = new_y;
 }
 
@@ -55,9 +42,9 @@ static void	move_left_right(t_game *game, int right)
 		dir_factor = -MOVE_SPEED;
 	new_x = game->scene.player.pos.x + game->scene.player.plane.x * dir_factor;
 	new_y = game->scene.player.pos.y + game->scene.player.plane.y * dir_factor;
-	if (!is_wall(game, new_x, game->scene.player.pos.y))
+	if (!check_collision(game, new_x, game->scene.player.pos.y))
 		game->scene.player.pos.x = new_x;
-	if (!is_wall(game, game->scene.player.pos.x, new_y))
+	if (!check_collision(game, game->scene.player.pos.x, new_y))
 		game->scene.player.pos.y = new_y;
 }
 
