@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 02:11:02 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 02:36:04 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -143,4 +143,4 @@ re: fclean all
 bonus: $(NAME)
 
 # Non-file targets
-.PHONY: all clean fclean re bonus 
+.PHONY: all clean fclean re bonus

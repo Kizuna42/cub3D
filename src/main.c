@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:21:27 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 02:53:50 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ static int	validate_args(int argc, char **argv)
 	return (1);
 }
 
-static int	main_loop_hook(t_game *game)
+static int	main_loop_hook(void *param)
 {
+	t_game	*game;
+
+	game = (t_game *)param;
 	handle_movement(game);
 	render_frame(game);
 	return (0);
@@ -35,16 +38,6 @@ static int	close_window(t_game *game)
 {
 	cleanup_game(game);
 	exit(0);
-	return (0);
-}
-
-static int	key_press(int keycode, t_game *game)
-{
-	if (keycode == KEY_ESC)
-	{
-		cleanup_game(game);
-		exit(0);
-	}
 	return (0);
 }
 
@@ -58,7 +51,6 @@ int	main(int argc, char **argv)
 		return (1);
 	mlx_loop_hook(game.mlx, main_loop_hook, &game);
 	mlx_hook(game.win, 17, 0, close_window, &game);
-	mlx_key_hook(game.win, key_press, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }
