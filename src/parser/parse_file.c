@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:29:58 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:47:42 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ static int	parse_line(char *line, t_scene *scene, int *map_started)
 		free(trimmed);
 		return (1);
 	}
-	if (!*map_started && (ft_strncmp(trimmed, "NO ", 3) == 0 || 
-		ft_strncmp(trimmed, "SO ", 3) == 0 || ft_strncmp(trimmed, "WE ", 3) == 0 || 
-		ft_strncmp(trimmed, "EA ", 3) == 0))
+	if (!*map_started && (ft_strncmp(trimmed, "NO ", 3) == 0
+		|| ft_strncmp(trimmed, "SO ", 3) == 0
+		|| ft_strncmp(trimmed, "WE ", 3) == 0
+		|| ft_strncmp(trimmed, "EA ", 3) == 0))
 	{
 		if (!parse_textures(trimmed, scene))
 		{
@@ -34,8 +35,8 @@ static int	parse_line(char *line, t_scene *scene, int *map_started)
 			return (0);
 		}
 	}
-	else if (!*map_started && (ft_strncmp(trimmed, "F ", 2) == 0 || 
-		ft_strncmp(trimmed, "C ", 2) == 0))
+	else if (!*map_started && (ft_strncmp(trimmed, "F ", 2) == 0
+		|| ft_strncmp(trimmed, "C ", 2) == 0))
 	{
 		if (!parse_colors(trimmed, scene))
 		{
@@ -43,45 +44,85 @@ static int	parse_line(char *line, t_scene *scene, int *map_started)
 			return (0);
 		}
 	}
-	else
+	else if (ft_strlen(trimmed) > 0)
 		*map_started = 1;
 	free(trimmed);
 	return (1);
 }
 
+static char	*read_entire_file(int fd)
+{
+	char	*content;
+	char	*buffer;
+	int		bytes_read;
+	int		total_size;
+	int		buffer_size;
+
+	buffer_size = 1024;
+	total_size = 0;
+	content = safe_malloc(buffer_size);
+	content[0] = '\0';
+	buffer = safe_malloc(buffer_size);
+	while ((bytes_read = read(fd, buffer, buffer_size - 1)) > 0)
+	{
+		buffer[bytes_read] = '\0';
+		if (total_size + bytes_read >= buffer_size)
+		{
+			buffer_size *= 2;
+			content = realloc(content, buffer_size);
+			if (!content)
+				return (NULL);
+		}
+		ft_strlcat(content, buffer, buffer_size);
+		total_size += bytes_read;
+	}
+	free(buffer);
+	return (content);
+}
+
 static int	read_file_content(int fd, t_scene *scene)
 {
-	char	*line;
-	int		map_started;
-	char	**lines;
+	char	*file_content;
+	char	**all_lines;
+	char	**map_lines;
 	int		i;
-	int		line_count;
+	int		map_started;
+	int		map_line_count;
 
+	file_content = read_entire_file(fd);
+	if (!file_content)
+		return (0);
+	all_lines = ft_split(file_content, '\n');
+	free(file_content);
+	if (!all_lines)
+		return (0);
 	map_started = 0;
-	line_count = 0;
-	lines = safe_malloc(sizeof(char *) * 1000);
-	while ((line = get_next_line(fd)) != NULL)
+	map_line_count = 0;
+	map_lines = safe_malloc(sizeof(char *) * 1000);
+	i = 0;
+	while (all_lines[i])
 	{
-		if (!parse_line(line, scene, &map_started))
+		if (!parse_line(all_lines[i], scene, &map_started))
 		{
-			free(line);
+			ft_free_split(all_lines);
+			free(map_lines);
 			return (0);
 		}
 		if (map_started)
-			lines[line_count++] = line;
-		else
-			free(line);
+			map_lines[map_line_count++] = ft_strdup(all_lines[i]);
+		i++;
 	}
-	lines[line_count] = NULL;
-	if (line_count > 0)
+	map_lines[map_line_count] = NULL;
+	ft_free_split(all_lines);
+	if (map_line_count > 0)
 	{
-		if (!parse_map_from_lines(lines, scene))
+		if (!parse_map_from_lines(map_lines, scene))
+		{
+			ft_free_split(map_lines);
 			return (0);
+		}
 	}
-	i = 0;
-	while (i < line_count)
-		free(lines[i++]);
-	free(lines);
+	ft_free_split(map_lines);
 	return (1);
 }
 
@@ -92,7 +133,7 @@ int	parse_file(const char *filename, t_scene *scene)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		error_exit(ERR_FILE_OPEN);
+		ft_putendl_fd(ERR_FILE_OPEN, STDERR_FILENO);
 		return (0);
 	}
 	if (!read_file_content(fd, scene))
