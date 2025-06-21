@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:39:07 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:54:18 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,27 +130,38 @@ typedef struct s_game
 /* Function prototypes */
 
 /* Parser */
-int		parse_file(const char *filename, t_scene *scene);
-int		parse_color_line(char *line, t_scene *scene);
-int		parse_texture_line(char *line, t_scene *scene);
-int		parse_map_data(char **lines, t_scene *scene, int start_line);
-int		validate_map(t_scene *scene);
-char	*read_entire_file(int fd);
-void	ft_free_split(char **split);
+int				parse_file(const char *filename, t_scene *scene);
+int				parse_color_line(char *line, t_scene *scene);
+int				parse_texture_line(char *line, t_scene *scene);
+int				parse_map_data(char **lines, t_scene *scene, int start_line);
+int				validate_map(t_scene *scene);
+char			*read_entire_file(int fd);
+void			ft_free_split(char **split);
+int				is_texture_line(char *line);
+int				is_color_line(char *line);
+int				is_map_line(char *line);
+int				process_lines(char **lines, t_scene *scene, int *map_start);
+int				process_config_line(char *line, t_scene *scene);
+int				count_map_lines(char **lines, int start);
+int				get_max_width(char **lines, int start, int count);
+int				fill_map_line(t_scene *scene, char **lines, int start, int i);
+int				set_player_position(t_scene *scene, int x, int y, char dir);
+int				process_map_char(t_scene *scene, char c, int x, int y);
 
 /* Game */
-int		init_game(t_game *game, const char *filename);
-void	cleanup_game(t_game *game);
-void	handle_movement(t_game *game);
-void	set_north_south_direction(t_player *player);
-void	set_east_west_direction(t_player *player);
+int				init_game(t_game *game, const char *filename);
+void			cleanup_game(t_game *game);
+void			handle_movement(t_game *game);
+void			set_north_south_direction(t_player *player);
+void			set_east_west_direction(t_player *player);
+int				game_loop(t_game *game);
 
 /* Rendering */
-void	render_frame(t_game *game);
-void	cast_ray(t_game *game, t_ray *ray, int x);
-void	draw_floor_ceiling(t_game *game);
-void	put_pixel(t_game *game, int x, int y, int color);
-void	draw_texture_column(t_game *game, t_ray *ray, int x, int tex_x);
+void			render_frame(t_game *game);
+void			cast_ray(t_game *game, t_ray *ray, int x);
+void			draw_floor_ceiling(t_game *game);
+void			put_pixel(t_game *game, int x, int y, int color);
+void			draw_texture_column(t_game *game, t_ray *ray, int x, int tex_x);
 
 /* Textures */
 int				load_texture(t_game *game, t_texture *texture, char *path);
@@ -161,11 +172,11 @@ int				get_texture_x(t_ray *ray, t_texture *texture);
 void			cleanup_textures(t_game *game);
 
 /* Utils */
-void	error_msg(char *msg);
-void	cleanup_and_exit(t_game *game, char *msg);
-double	ft_abs(double x);
-double	ft_sqrt(double x);
-int		ft_strcmp(const char *s1, const char *s2);
-int		ft_isspace(int c);
+void			error_msg(char *msg);
+void			cleanup_and_exit(t_game *game, char *msg);
+double			ft_abs(double x);
+double			ft_sqrt(double x);
+int				ft_strcmp(const char *s1, const char *s2);
+int				ft_isspace(int c);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:39:20 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:49:12 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ static void	draw_wall_stripe(t_game *game, t_ray *ray, int x)
 {
 	int	tex_x;
 
-	tex_x = get_texture_x(ray, &game->scene.textures[get_wall_texture_index(
-		ray)]);
+	tex_x = get_texture_x(ray,
+			&game->scene.textures[get_wall_texture_index(ray)]);
 	draw_texture_column(game, ray, x, tex_x);
 }
 

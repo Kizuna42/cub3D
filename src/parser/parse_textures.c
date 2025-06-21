@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:31:06 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:49:12 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,45 +22,28 @@ static int	set_texture_path(char **target, char *path)
 	return (1);
 }
 
-int	parse_texture_line(char *line, t_scene *scene)
+static int	parse_single_texture(char *line, char **target, int prefix_len)
 {
 	char	*path;
 
+	path = ft_strtrim(line + prefix_len, " \t");
+	if (!path)
+		return (error_msg("Failed to parse texture path"), 0);
+	if (!set_texture_path(target, path))
+		return (free(path), 0);
+	free(path);
+	return (1);
+}
+
+int	parse_texture_line(char *line, t_scene *scene)
+{
 	if (ft_strncmp(line, "NO ", 3) == 0)
-	{
-		path = ft_strtrim(line + 3, " \t");
-		if (!path)
-			return (error_msg("Failed to parse texture path"), 0);
-		if (!set_texture_path(&scene->north_texture, path))
-			return (free(path), 0);
-		free(path);
-	}
+		return (parse_single_texture(line, &scene->north_texture, 3));
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-	{
-		path = ft_strtrim(line + 3, " \t");
-		if (!path)
-			return (error_msg("Failed to parse texture path"), 0);
-		if (!set_texture_path(&scene->south_texture, path))
-			return (free(path), 0);
-		free(path);
-	}
+		return (parse_single_texture(line, &scene->south_texture, 3));
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-	{
-		path = ft_strtrim(line + 3, " \t");
-		if (!path)
-			return (error_msg("Failed to parse texture path"), 0);
-		if (!set_texture_path(&scene->west_texture, path))
-			return (free(path), 0);
-		free(path);
-	}
+		return (parse_single_texture(line, &scene->west_texture, 3));
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-	{
-		path = ft_strtrim(line + 3, " \t");
-		if (!path)
-			return (error_msg("Failed to parse texture path"), 0);
-		if (!set_texture_path(&scene->east_texture, path))
-			return (free(path), 0);
-		free(path);
-	}
+		return (parse_single_texture(line, &scene->east_texture, 3));
 	return (1);
 }

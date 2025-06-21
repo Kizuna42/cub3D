@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 00:38:31 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 00:50:55 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,13 +28,16 @@ LIBFT_DIR = $(LIB_DIR)/libft
 # Core source files
 CORE_SRCS = main.c \
 			parser/parse_file.c \
+			parser/parse_file_utils.c \
 			parser/parser_utils.c \
 			parser/parse_map.c \
+			parser/parse_map_utils.c \
 			parser/parse_textures.c \
 			parser/parse_colors.c \
 			parser/validate_map.c \
 			game/init.c \
 			game/init_utils.c \
+			game/game_loop.c \
 			game/movement.c \
 			game/cleanup.c \
 			render/raycasting.c \
