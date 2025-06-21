@@ -5,30 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 22:04:09 by kizuna           ###   ########.fr       */
+/*   Created: 2023/10/25 10:00:00 by kizuna            #+#    #+#             */
+/*   Updated: 2025/06/21 22:37:36 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	init_game_struct(t_game *game)
+static void	init_game_data(t_game *game)
 {
 	game->mlx = NULL;
 	game->win = NULL;
+	game->textures.north = NULL;
+	game->textures.south = NULL;
+	game->textures.west = NULL;
+	game->textures.east = NULL;
+	game->textures.floor = -1;
+	game->textures.ceiling = -1;
 	game->map.grid = NULL;
-	game->map.height = 0;
 	game->map.width = 0;
-	game->north_tex.path = NULL;
-	game->south_tex.path = NULL;
-	game->west_tex.path = NULL;
-	game->east_tex.path = NULL;
-	game->floor_color.trgb = 0;
-	game->ceiling_color.trgb = 0;
-	game->player.pos_x = -1;
-	game->player.pos_y = -1;
-	game->player.dir_x = 0;
-	game->player.dir_y = 0;
+	game->map.height = 0;
+	game->player.pos_x = 0;
+	game->player.pos_y = 0;
+	game->player.direction = '\0';
 }
 
 int	main(int argc, char **argv)
@@ -37,12 +36,10 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		printf("Error\nUsage: ./cub3D <map_file.cub>\n");
+		printf("Error\n%s\n", ERR_ARGC);
 		return (1);
 	}
-	init_game_struct(&game);
-	if (!parse_map_file(&game, argv[1]))
-		return (1);
-	printf("Game validated and ready to launch!\n");
+	init_game_data(&game);
+	printf("Parsing seems successful (WIP).\n");
 	return (0);
-} 
+}
