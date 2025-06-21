@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2024/01/01 00:00:00 by KIZUNA           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:55:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 #include "../../lib/minilibx_opengl_20191021/mlx.h"
 
 /* macOS specific key codes */
-# define MAC_KEY_W 13
-# define MAC_KEY_A 0
-# define MAC_KEY_S 1
-# define MAC_KEY_D 2
-# define MAC_KEY_LEFT 123
-# define MAC_KEY_RIGHT 124
-# define MAC_KEY_ESC 53
+#define MAC_KEY_W 13
+#define MAC_KEY_A 0
+#define MAC_KEY_S 1
+#define MAC_KEY_D 2
+#define MAC_KEY_LEFT 123
+#define MAC_KEY_RIGHT 124
+#define MAC_KEY_ESC 53
 
 static int	map_keycode_to_abstract(int keycode)
 {
@@ -88,12 +88,5 @@ int	platform_handle_keyrelease(int keycode, t_game *game)
 	abstract_key = map_keycode_to_abstract(keycode);
 	if (abstract_key >= 0 && abstract_key < 256)
 		game->keys[abstract_key] = KEY_RELEASED;
-	return (0);
-}
-
-int	platform_close_window(t_game *game)
-{
-	cleanup_game(game);
-	exit(0);
 	return (0);
 }

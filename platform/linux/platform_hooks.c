@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2024/01/01 00:00:00 by KIZUNA           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:55:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 #include <X11/keysym.h>
 
 /* Linux specific key codes */
-# define LINUX_KEY_W XK_w
-# define LINUX_KEY_A XK_a
-# define LINUX_KEY_S XK_s
-# define LINUX_KEY_D XK_d
-# define LINUX_KEY_LEFT XK_Left
-# define LINUX_KEY_RIGHT XK_Right
-# define LINUX_KEY_ESC XK_Escape
+#define LINUX_KEY_W XK_w
+#define LINUX_KEY_A XK_a
+#define LINUX_KEY_S XK_s
+#define LINUX_KEY_D XK_d
+#define LINUX_KEY_LEFT XK_Left
+#define LINUX_KEY_RIGHT XK_Right
+#define LINUX_KEY_ESC XK_Escape
 
 static int	map_keycode_to_abstract(int keycode)
 {
@@ -94,12 +94,5 @@ int	platform_handle_keyrelease(int keycode, t_game *game)
 	abstract_key = map_keycode_to_abstract(keycode);
 	if (abstract_key >= 0 && abstract_key < 256)
 		game->keys[abstract_key] = KEY_RELEASED;
-	return (0);
-}
-
-int	platform_close_window(t_game *game)
-{
-	cleanup_game(game);
-	exit(0);
 	return (0);
 }

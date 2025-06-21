@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 00:50:55 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 01:14:51 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,9 @@ OBJ_DIR = obj
 INCLUDE_DIR = include
 LIB_DIR = lib
 LIBFT_DIR = $(LIB_DIR)/libft
+
+# OS Detection
+UNAME_S := $(shell uname -s)
 
 # Core source files
 CORE_SRCS = main.c \
@@ -49,12 +52,16 @@ CORE_SRCS = main.c \
 			utils/math.c \
 			utils/libft_utils.c
 
-# Add src directory prefix to core sources
-SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS))
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+# Platform-specific source files
+ifeq ($(UNAME_S), Darwin)
+	PLATFORM_SRCS = platform/macos/platform_hooks.c platform/macos/platform_close.c
+else
+	PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_close.c
+endif
 
-# OS Detection
-UNAME_S := $(shell uname -s)
+# Add src directory prefix to core sources
+SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS)) $(PLATFORM_SRCS)
+OBJS = $(addprefix $(OBJ_DIR)/, $(CORE_SRCS:.c=.o)) $(PLATFORM_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 # Platform-specific settings
 ifeq ($(UNAME_S), Darwin)
@@ -89,6 +96,12 @@ $(NAME): $(LIBFT) $(MLX_DIR) $(OBJS)
 
 # Compile core source files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@echo "$(YELLOW)Compiling $<...$(RESET)"
+	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDES) -c $< -o $@
+
+# Compile platform-specific files
+$(OBJ_DIR)/platform/%.o: platform/%.c
 	@mkdir -p $(dir $@)
 	@echo "$(YELLOW)Compiling $<...$(RESET)"
 	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDES) -c $< -o $@

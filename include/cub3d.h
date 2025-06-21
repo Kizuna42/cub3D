@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:54:18 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 01:14:12 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include "keycodes.h"
 
 /* Window settings */
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 # define WINDOW_WIDTH 1024
 # define WINDOW_HEIGHT 768
 # define WIN_TITLE "cub3D"
@@ -152,8 +154,6 @@ int				process_map_char(t_scene *scene, char c, int x, int y);
 int				init_game(t_game *game, const char *filename);
 void			cleanup_game(t_game *game);
 void			handle_movement(t_game *game);
-void			set_north_south_direction(t_player *player);
-void			set_east_west_direction(t_player *player);
 int				game_loop(t_game *game);
 
 /* Rendering */
@@ -178,5 +178,12 @@ double			ft_abs(double x);
 double			ft_sqrt(double x);
 int				ft_strcmp(const char *s1, const char *s2);
 int				ft_isspace(int c);
+
+/* Platform-specific functions */
+int				platform_init(t_game *game);
+void			platform_cleanup(t_game *game);
+int				platform_handle_keypress(int keycode, t_game *game);
+int				platform_handle_keyrelease(int keycode, t_game *game);
+int				platform_close_window(t_game *game);
 
 #endif
