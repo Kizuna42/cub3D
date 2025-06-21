@@ -12,7 +12,6 @@
 
 #include "../../include/cub3d.h"
 #include "../../include/keycodes.h"
-#include "../../lib/minilibx-linux/mlx.h"
 #include <X11/keysym.h>
 
 /* Linux specific key codes */

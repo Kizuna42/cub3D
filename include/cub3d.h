@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 01:14:12 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 03:04:39 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,14 @@
 # include <errno.h>
 # include <sys/time.h>
 # include "../lib/libft/libft.h"
-# include "../lib/minilibx_opengl_20191021/mlx.h"
+
+/* Platform-specific MLX includes */
+# ifdef __APPLE__
+#  include "../lib/minilibx_opengl_20191021/mlx.h"
+# else
+#  include "../lib/minilibx-linux/mlx.h"
+# endif
+
 # include "keycodes.h"
 
 /* Window settings */

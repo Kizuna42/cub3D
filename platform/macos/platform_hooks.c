@@ -12,7 +12,6 @@
 
 #include "../../include/cub3d.h"
 #include "../../include/keycodes.h"
-#include "../../lib/minilibx_opengl_20191021/mlx.h"
 
 /* macOS specific key codes */
 #define MAC_KEY_W 13
