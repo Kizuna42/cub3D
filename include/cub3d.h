@@ -1,62 +1,162 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
+/*   Updated: 2025/06/21 23:25:08 by kizuna           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../lib/libft/libft.h"
-# include <fcntl.h>
-# include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
+# include <math.h>
+# include <string.h>
+# include <errno.h>
+# include <sys/time.h>
+# include "../lib/libft/libft.h"
 
-// This header will be dynamically included by the Makefile based on the OS
-# ifdef __APPLE__
-#  include "mlx.h"
-# else
-#  include "mlx.h"
-# endif
+/* Window settings */
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
+# define WIN_TITLE "cub3D"
 
-// Error Messages
-# define ERR_ARGC "Invalid number of arguments."
-# define ERR_FILE_EXT "Invalid file extension. Must be .cub"
-# define ERR_FILE_OPEN "Could not open file."
-# define ERR_PARSE_ID "Invalid identifier in file."
-# define ERR_PARSE_COLOR "Invalid color format."
-# define ERR_PARSE_TEX "Invalid texture path."
-# define ERR_MAP_WALL "Map is not surrounded by walls."
-# define ERR_MAP_PLAYER "Invalid player position."
-# define ERR_MALLOC "Memory allocation failed."
+/* Math constants */
+# define PI 3.14159265359
+# define TWO_PI 6.28318530718
+# define HALF_PI 1.57079632679
 
-typedef struct s_texture
+/* Movement and rotation speed */
+# define MOVE_SPEED 0.05
+# define ROT_SPEED 0.03
+
+/* Colors */
+typedef struct s_color
 {
-	char			*north;
-	char			*south;
-	char			*west;
-	char			*east;
-	int				floor;
-	int				ceiling;
-}					t_texture;
+	int	r;
+	int	g;
+	int	b;
+	int	rgb;
+}	t_color;
 
-typedef struct s_map
+/* Vector for position and direction */
+typedef struct s_vector
 {
-	char			**grid;
-	int				width;
-	int				height;
-}					t_map;
+	double	x;
+	double	y;
+}	t_vector;
 
+/* Player information */
 typedef struct s_player
 {
-	double			pos_x;
-	double			pos_y;
-	char			direction;
-}					t_player;
+	t_vector	pos;
+	t_vector	dir;
+	t_vector	plane;
+	char		spawn_dir;
+}	t_player;
 
+/* Texture information */
+typedef struct s_texture
+{
+	void	*img;
+	char	*addr;
+	int		width;
+	int		height;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	char	*path;
+}	t_texture;
+
+/* Map information */
+typedef struct s_map
+{
+	char	**grid;
+	int		width;
+	int		height;
+}	t_map;
+
+/* Scene configuration */
+typedef struct s_scene
+{
+	t_texture	textures[4];
+	t_color		floor_color;
+	t_color		ceiling_color;
+	t_map		map;
+	t_player	player;
+}	t_scene;
+
+/* Main game structure */
 typedef struct s_game
 {
-	void			*mlx;
-	void			*win;
-	t_texture		textures;
-	t_map			map;
-	t_player		player;
-}					t_game;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	t_scene		scene;
+	int			keys[256];
+}	t_game;
+
+/* Texture indices */
+typedef enum e_texture_index
+{
+	NORTH = 0,
+	SOUTH = 1,
+	WEST = 2,
+	EAST = 3
+}	t_texture_index;
+
+/* Error messages */
+# define ERR_USAGE "Usage: ./cub3D <map.cub>"
+# define ERR_FILE_EXT "Error\nFile must have .cub extension"
+# define ERR_FILE_OPEN "Error\nCannot open file"
+# define ERR_FILE_READ "Error\nCannot read file"
+# define ERR_INVALID_MAP "Error\nInvalid map"
+# define ERR_INVALID_TEXTURE "Error\nInvalid texture"
+# define ERR_INVALID_COLOR "Error\nInvalid color"
+# define ERR_MALLOC "Error\nMemory allocation failed"
+# define ERR_MLX "Error\nMLX initialization failed"
+
+/* Function prototypes */
+
+/* Parser */
+int		parse_file(const char *filename, t_scene *scene);
+int		parse_textures(char *line, t_scene *scene);
+int		parse_colors(char *line, t_scene *scene);
+int		parse_map(int fd, t_scene *scene);
+int		validate_map(t_scene *scene);
+
+/* Game */
+int		init_game(t_game *game, const char *filename);
+void	cleanup_game(t_game *game);
+int		game_loop(t_game *game);
+
+/* Rendering */
+void	render_frame(t_game *game);
+void	cast_rays(t_game *game);
+void	draw_column(t_game *game, int x, double wall_dist, int side);
+
+/* Utils */
+void	error_exit(const char *message);
+void	*safe_malloc(size_t size);
+int		create_rgb(int r, int g, int b);
+double	normalize_angle(double angle);
+
+/* Platform-specific functions (implemented in platform/ directory) */
+int		platform_init(t_game *game);
+void	platform_cleanup(t_game *game);
+int		platform_handle_keypress(int keycode, t_game *game);
+int		platform_handle_keyrelease(int keycode, t_game *game);
+int		platform_close_window(t_game *game);
 
 #endif

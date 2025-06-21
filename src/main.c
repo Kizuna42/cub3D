@@ -5,41 +5,46 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 10:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 22:37:36 by kizuna           ###   ########.fr       */
+/*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
+/*   Updated: 2025/06/21 23:26:51 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../include/cub3d.h"
 
-static void	init_game_data(t_game *game)
+static int	validate_arguments(int argc, char **argv)
 {
-	game->mlx = NULL;
-	game->win = NULL;
-	game->textures.north = NULL;
-	game->textures.south = NULL;
-	game->textures.west = NULL;
-	game->textures.east = NULL;
-	game->textures.floor = -1;
-	game->textures.ceiling = -1;
-	game->map.grid = NULL;
-	game->map.width = 0;
-	game->map.height = 0;
-	game->player.pos_x = 0;
-	game->player.pos_y = 0;
-	game->player.direction = '\0';
+	int		len;
+	char	*filename;
+
+	if (argc != 2)
+	{
+		ft_putendl_fd(ERR_USAGE, STDERR_FILENO);
+		return (0);
+	}
+	filename = argv[1];
+	len = ft_strlen(filename);
+	if (len < 4 || ft_strncmp(filename + len - 4, ".cub", 4) != 0)
+	{
+		ft_putendl_fd(ERR_FILE_EXT, STDERR_FILENO);
+		return (0);
+	}
+	return (1);
 }
 
 int	main(int argc, char **argv)
 {
 	t_game	game;
 
-	if (argc != 2)
+	if (!validate_arguments(argc, argv))
+		return (1);
+	ft_memset(&game, 0, sizeof(t_game));
+	if (!init_game(&game, argv[1]))
 	{
-		printf("Error\n%s\n", ERR_ARGC);
+		cleanup_game(&game);
 		return (1);
 	}
-	init_game_data(&game);
-	printf("Parsing seems successful (WIP).\n");
+	game_loop(&game);
+	cleanup_game(&game);
 	return (0);
 }
