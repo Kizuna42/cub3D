@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 02:36:04 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 03:00:15 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,7 @@ else
 	# Linux (assuming anything else is Linux)
 	MLX_DIR = $(LIB_DIR)/minilibx-linux
 	MLX_LIB = $(MLX_DIR)/libmlx.a
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
 	MLX_INCLUDES = -I$(MLX_DIR)
 endif
 
@@ -117,7 +117,11 @@ $(LIBFT):
 # Build minilibx
 $(MLX_LIB):
 	@echo "$(BLUE)Building minilibx...$(RESET)"
+ifeq ($(UNAME_S), Darwin)
 	@make -C $(MLX_DIR)
+else
+	@make -C $(MLX_DIR) || (echo "$(YELLOW)Warning: minilibx test build failed, checking if library exists...$(RESET)" && test -f $(MLX_LIB))
+endif
 	@echo "$(GREEN)✓ minilibx built successfully!$(RESET)"
 
 # Clean object files
@@ -125,7 +129,11 @@ clean:
 	@echo "$(RED)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
+ifeq ($(UNAME_S), Darwin)
 	@make -C $(MLX_DIR) clean 2>/dev/null || true
+else
+	@(cd $(MLX_DIR) && ./configure clean) 2>/dev/null || true
+endif
 	@echo "$(GREEN)✓ Object files cleaned!$(RESET)"
 
 # Clean everything
@@ -133,7 +141,11 @@ fclean: clean
 	@echo "$(RED)Cleaning executable and libraries...$(RESET)"
 	@rm -f $(NAME)
 	@make -C $(LIBFT_DIR) fclean
+ifeq ($(UNAME_S), Darwin)
 	@make -C $(MLX_DIR) clean 2>/dev/null || true
+else
+	@(cd $(MLX_DIR) && ./configure clean) 2>/dev/null || true
+endif
 	@echo "$(GREEN)✓ Everything cleaned!$(RESET)"
 
 # Rebuild everything
