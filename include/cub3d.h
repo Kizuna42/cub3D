@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 19:05:00 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 19:09:52 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,56 @@
 
 // --- Structures ---
 
-// Example of a game data structure
+typedef struct s_texture
+{
+	char	*path;
+	void	*img_ptr;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+	int		width;
+	int		height;
+}	t_texture;
+
+typedef struct s_color
+{
+	int	r;
+	int	g;
+	int	b;
+	int	trgb;
+}	t_color;
+
+typedef struct s_map
+{
+	char		**grid;
+	int			width;
+	int			height;
+}	t_map;
+
+typedef struct s_player
+{
+	double	pos_x;
+	double	pos_y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+}	t_player;
+
 typedef struct s_game
 {
-	void	*mlx;
-	void	*win;
-	// Will be expanded with map data, player data, textures, etc.
+	void		*mlx;
+	void		*win;
+	t_texture	north_tex;
+	t_texture	south_tex;
+	t_texture	west_tex;
+	t_texture	east_tex;
+	t_color		floor_color;
+	t_color		ceiling_color;
+	t_map		map;
+	t_player	player;
+	int			is_running;
 }	t_game;
 
 #endif 
