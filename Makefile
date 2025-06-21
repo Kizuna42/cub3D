@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#              #
-#    Updated: 2025/06/21 19:09:10 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/21 19:10:28 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CFLAGS = -Wall -Wextra -Werror -I include -I lib/libft
 CORE_SRCS_DIR = src/
 # TODO: Add your source files here as they are created
 # Example: CORE_SRCS = main.c parser.c ...
-CORE_SRCS = main.c
+CORE_SRCS = main.c parser/parser.c
 SRCS_LIST = $(addprefix $(CORE_SRCS_DIR), $(CORE_SRCS))
 
 # --- Libft ---
