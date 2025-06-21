@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:31:36 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:51:30 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	is_valid_map_char(char c)
 {
-	return (c == '0' || c == '1' || c == 'N' || c == 'S' || 
-		c == 'E' || c == 'W' || c == ' ');
+	return (c == '0' || c == '1' || c == 'N' || c == 'S'
+		|| c == 'E' || c == 'W' || c == ' ');
 }
 
 static int	find_player(char **grid, int height, t_player *player)
@@ -31,8 +31,8 @@ static int	find_player(char **grid, int height, t_player *player)
 		x = 0;
 		while (grid[y][x])
 		{
-			if (grid[y][x] == 'N' || grid[y][x] == 'S' || 
-				grid[y][x] == 'E' || grid[y][x] == 'W')
+			if (grid[y][x] == 'N' || grid[y][x] == 'S'
+				|| grid[y][x] == 'E' || grid[y][x] == 'W')
 			{
 				player->pos.x = x + 0.5;
 				player->pos.y = y + 0.5;

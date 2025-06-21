@@ -6,11 +6,12 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:47:24 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:55:08 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
+#include "../../lib/minilibx_opengl_20191021/mlx.h"
 
 static void	init_player_direction(t_player *player)
 {
@@ -55,8 +56,17 @@ int	init_game(t_game *game, const char *filename)
 	return (1);
 }
 
+static int	game_loop_hook(t_game *game)
+{
+	handle_movement(game);
+	render_frame(game);
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	return (0);
+}
+
 int	game_loop(t_game *game)
 {
-	(void)game;
+	mlx_loop_hook(game->mlx, (int (*)(void *))game_loop_hook, game);
+	mlx_loop(game->mlx);
 	return (0);
 } 

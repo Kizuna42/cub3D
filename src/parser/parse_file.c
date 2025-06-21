@@ -6,78 +6,34 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:47:42 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:51:54 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
-static int	parse_line(char *line, t_scene *scene, int *map_started)
+int	parse_line(char *line, t_scene *scene, int *map_started)
 {
 	char	*trimmed;
 
 	trimmed = ft_strtrim(line, " \t\n\r");
 	if (!trimmed)
 		return (0);
-	if (ft_strlen(trimmed) == 0 || trimmed[0] == '\0')
-	{
-		free(trimmed);
-		return (1);
-	}
-	if (!*map_started && (ft_strncmp(trimmed, "NO ", 3) == 0
-		|| ft_strncmp(trimmed, "SO ", 3) == 0
-		|| ft_strncmp(trimmed, "WE ", 3) == 0
-		|| ft_strncmp(trimmed, "EA ", 3) == 0))
+	if (ft_strlen(trimmed) == 0)
+		return (free(trimmed), 1);
+	if (!*map_started && is_texture_line(trimmed))
 	{
 		if (!parse_textures(trimmed, scene))
-		{
-			free(trimmed);
-			return (0);
-		}
+			return (free(trimmed), 0);
 	}
-	else if (!*map_started && (ft_strncmp(trimmed, "F ", 2) == 0
-		|| ft_strncmp(trimmed, "C ", 2) == 0))
+	else if (!*map_started && is_color_line(trimmed))
 	{
 		if (!parse_colors(trimmed, scene))
-		{
-			free(trimmed);
-			return (0);
-		}
+			return (free(trimmed), 0);
 	}
 	else if (ft_strlen(trimmed) > 0)
 		*map_started = 1;
-	free(trimmed);
-	return (1);
-}
-
-static char	*read_entire_file(int fd)
-{
-	char	*content;
-	char	*buffer;
-	int		bytes_read;
-	int		total_size;
-	int		buffer_size;
-
-	buffer_size = 1024;
-	total_size = 0;
-	content = safe_malloc(buffer_size);
-	content[0] = '\0';
-	buffer = safe_malloc(buffer_size);
-	while ((bytes_read = read(fd, buffer, buffer_size - 1)) > 0)
-	{
-		buffer[bytes_read] = '\0';
-		if (total_size + bytes_read >= buffer_size)
-		{
-			buffer_size *= 2;
-			content = realloc(content, buffer_size);
-			if (!content)
-				return (NULL);
-		}
-		ft_strlcat(content, buffer, buffer_size);
-		total_size += bytes_read;
-	}
-	free(buffer);
-	return (content);
+	return (free(trimmed), 1);
 }
 
 static int	read_file_content(int fd, t_scene *scene)
@@ -85,8 +41,6 @@ static int	read_file_content(int fd, t_scene *scene)
 	char	*file_content;
 	char	**all_lines;
 	char	**map_lines;
-	int		i;
-	int		map_started;
 	int		map_line_count;
 
 	file_content = read_entire_file(fd);
@@ -96,34 +50,15 @@ static int	read_file_content(int fd, t_scene *scene)
 	free(file_content);
 	if (!all_lines)
 		return (0);
-	map_started = 0;
-	map_line_count = 0;
 	map_lines = safe_malloc(sizeof(char *) * 1000);
-	i = 0;
-	while (all_lines[i])
-	{
-		if (!parse_line(all_lines[i], scene, &map_started))
-		{
-			ft_free_split(all_lines);
-			free(map_lines);
-			return (0);
-		}
-		if (map_started)
-			map_lines[map_line_count++] = ft_strdup(all_lines[i]);
-		i++;
-	}
-	map_lines[map_line_count] = NULL;
+	map_line_count = process_lines(all_lines, scene, map_lines);
 	ft_free_split(all_lines);
 	if (map_line_count > 0)
 	{
 		if (!parse_map_from_lines(map_lines, scene))
-		{
-			ft_free_split(map_lines);
-			return (0);
-		}
+			return (ft_free_split(map_lines), 0);
 	}
-	ft_free_split(map_lines);
-	return (1);
+	return (ft_free_split(map_lines), 1);
 }
 
 int	parse_file(const char *filename, t_scene *scene)
@@ -137,10 +72,7 @@ int	parse_file(const char *filename, t_scene *scene)
 		return (0);
 	}
 	if (!read_file_content(fd, scene))
-	{
-		close(fd);
-		return (0);
-	}
+		return (close(fd), 0);
 	close(fd);
 	return (validate_map(scene));
 } 

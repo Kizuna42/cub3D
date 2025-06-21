@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:31:12 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:56:48 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,15 @@ typedef enum e_texture_index
 
 /* Parser */
 int		parse_file(const char *filename, t_scene *scene);
+int		parse_line(char *line, t_scene *scene, int *map_started);
 int		parse_textures(char *line, t_scene *scene);
 int		parse_colors(char *line, t_scene *scene);
 int		parse_map_from_lines(char **lines, t_scene *scene);
 int		validate_map(t_scene *scene);
+int		is_texture_line(char *trimmed);
+int		is_color_line(char *trimmed);
+char	*read_entire_file(int fd);
+int		process_lines(char **all_lines, t_scene *scene, char **map_lines);
 char	*get_next_line(int fd);
 void	ft_free_split(char **split);
 
@@ -142,11 +147,13 @@ void	ft_free_split(char **split);
 int		init_game(t_game *game, const char *filename);
 void	cleanup_game(t_game *game);
 int		game_loop(t_game *game);
+void	handle_movement(t_game *game);
 
 /* Rendering */
 void	render_frame(t_game *game);
 void	cast_rays(t_game *game);
 void	draw_column(t_game *game, int x, double wall_dist, int side);
+void	put_pixel(t_game *game, int x, int y, int color);
 
 /* Utils */
 void	error_exit(const char *message);
