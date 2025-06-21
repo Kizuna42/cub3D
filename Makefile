@@ -6,66 +6,82 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#              #
-#    Updated: 2025/06/21 19:15:19 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/21 21:56:42 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# --- Variables ---
 NAME = cub3D
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I include -I lib/libft
-# For debugging, you can use: CFLAGS += -g
+CFLAGS = -Wall -Wextra -Werror
 
-# --- Source Files ---
-CORE_SRCS_DIR = src/
-# TODO: Add your source files here as they are created
-# Example: CORE_SRCS = main.c parser.c ...
-CORE_SRCS = main.c parser/parser.c parser/parser_utils.c
-SRCS_LIST = $(addprefix $(CORE_SRCS_DIR), $(CORE_SRCS))
+# --- Directories ---
+SRC_DIR = src
+OBJ_DIR = obj
+LIBFT_DIR = lib/libft
+MLX_DIR = lib/minilibx_opengl_20191021
 
-# --- Libft ---
-LIBFT_DIR = lib/libft/
-LIBFT = $(LIBFT_DIR)libft.a
+# --- Includes ---
+INCLUDES = -I include -I $(LIBFT_DIR) -I $(MLX_DIR)
 
-# --- OS Detection and Platform Specifics ---
+# --- Sources ---
+SRC_FILES = main.c \
+            parser/parser.c \
+            parser/parser_utils.c \
+            parser/parser_map.c
+SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+
+# --- Objects ---
+OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+
+# --- Libraries ---
+LIBFT = $(LIBFT_DIR)/libft.a
+MLX = $(MLX_DIR)/libmlx.a
+LDFLAGS = -L $(LIBFT_DIR) -L $(MLX_DIR)
+LDLIBS = -lft -lmlx -framework OpenGL -framework AppKit
+
+# --- OS Specifics ---
 UNAME_S := $(shell uname -s)
-
-ifeq ($(UNAME_S), Darwin)
-	# macOS
-	PLATFORM_DIR = platform/macos/
-	MLX_DIR = lib/minilibx_opengl_20191021/
-	# MLX can also be `lib/minilibx_mms_20200219/` for Metal version
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
-	CFLAGS += -I$(PLATFORM_DIR) -I$(MLX_DIR)
-else
-	# Linux (assuming anything else is Linux)
-	PLATFORM_DIR = platform/linux/
-	MLX_DIR = lib/minilibx-linux/
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz
-	CFLAGS += -I$(PLATFORM_DIR) -I$(MLX_DIR)
+ifeq ($(UNAME_S),Linux)
+	# Linux specific settings if any
 endif
+ifeq ($(UNAME_S),Darwin)
+	PLATFORM_HOOKS_SRC = platform/macos/platform_hooks.c
+endif
+PLATFORM_HOOKS_OBJ = $(PLATFORM_HOOKS_SRC:.c=.o)
+OBJS += $(PLATFORM_HOOKS_OBJ)
 
-PLATFORM_SRCS_LIST = $(wildcard $(PLATFORM_DIR)*.c)
-SRCS = $(SRCS_LIST) $(PLATFORM_SRCS_LIST)
-OBJS = $(SRCS:.c=.o)
 
-# --- Build Rules ---
+# --- Rules ---
+.PHONY: all clean fclean re bonus
+
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(MAKE) -C $(MLX_DIR)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -L$(LIBFT_DIR) -lft $(MLX_FLAGS)
+$(NAME): $(LIBFT) $(MLX) $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $(NAME) $(OBJS) $(LDLIBS)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(PLATFORM_HOOKS_OBJ): $(PLATFORM_HOOKS_SRC)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR)
+
+$(MLX):
+	@$(MAKE) -C $(MLX_DIR)
 
 clean:
-	$(MAKE) -C $(LIBFT_DIR) clean
-	rm -f $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@$(MAKE) -C $(MLX_DIR) clean
+	@rm -rf $(OBJ_DIR) $(PLATFORM_HOOKS_OBJ)
 
-fclean: clean
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	rm -f $(NAME)
+fclean:
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(MLX_DIR) clean
+	@rm -rf $(OBJ_DIR) $(PLATFORM_HOOKS_OBJ)
+	@rm -f $(NAME)
 
-re: fclean all
-
-.PHONY: all clean fclean re 
+re: fclean all 

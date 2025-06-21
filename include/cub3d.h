@@ -6,14 +6,13 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 19:13:26 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 22:04:42 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-// --- Standard Libraries ---
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -21,25 +20,10 @@
 # include <string.h>
 # include <math.h>
 
-// --- Libft ---
 # include "libft.h"
+# include "mlx.h"
 
-// --- MiniLibX ---
-// This header will be included via CFLAGS in Makefile
-// # include "mlx.h" 
-
-// --- Project Headers ---
-// # include "parser.h" // Removed to break circular dependency
-
-// --- Forward Declarations ---
-struct s_game;
-
-// --- Constants ---
-# define SCREEN_WIDTH 1280
-# define SCREEN_HEIGHT 720
-
-// --- Structures ---
-
+// Forward Declarations & Structures
 typedef struct s_texture
 {
 	char	*path;
@@ -92,7 +76,16 @@ typedef struct s_game
 	int			is_running;
 }	t_game;
 
+void	free_game_resources(t_game *game);
+
 // --- Function Prototypes ---
-// Moved to respective modules
+
+// Parser
+int		parse_map_file(t_game *game, const char *filename);
+int		parse_texture(t_texture *texture, char *path);
+int		parse_color(t_color *color, char *rgb_str);
+int		convert_list_to_grid(t_game *game, t_list *map_lines);
+int		dispatch_config(t_game *game, char **tokens);
+int		parse_config_line(t_game *game, const char *line);
 
 #endif 
