@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:25:08 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:31:12 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,10 @@ typedef enum e_texture_index
 int		parse_file(const char *filename, t_scene *scene);
 int		parse_textures(char *line, t_scene *scene);
 int		parse_colors(char *line, t_scene *scene);
-int		parse_map(int fd, t_scene *scene);
+int		parse_map_from_lines(char **lines, t_scene *scene);
 int		validate_map(t_scene *scene);
+char	*get_next_line(int fd);
+void	ft_free_split(char **split);
 
 /* Game */
 int		init_game(t_game *game, const char *filename);

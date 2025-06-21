@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/21 23:24:30 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/21 23:32:41 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,8 @@ CORE_SRCS = main.c \
 			render/raycasting.c \
 			render/draw.c \
 			utils/error.c \
-			utils/math.c
+			utils/math.c \
+			utils/libft_utils.c
 
 # Add src directory prefix to core sources
 SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS))
