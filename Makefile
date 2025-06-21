@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 01:14:51 by kizuna           ###   ########.fr        #
+#    Updated: 2025/06/22 01:53:21 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,11 +67,13 @@ OBJS = $(addprefix $(OBJ_DIR)/, $(CORE_SRCS:.c=.o)) $(PLATFORM_SRCS:%.c=$(OBJ_DI
 ifeq ($(UNAME_S), Darwin)
 	# macOS
 	MLX_DIR = $(LIB_DIR)/minilibx_opengl_20191021
+	MLX_LIB = $(MLX_DIR)/libmlx.a
 	MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
 	MLX_INCLUDES = -I$(MLX_DIR)
 else
 	# Linux (assuming anything else is Linux)
 	MLX_DIR = $(LIB_DIR)/minilibx-linux
+	MLX_LIB = $(MLX_DIR)/libmlx.a
 	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 	MLX_INCLUDES = -I$(MLX_DIR)
 endif
@@ -89,7 +91,7 @@ RESET = \033[0m
 # Rules
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(MLX_DIR) $(OBJS)
+$(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
 	@echo "$(BLUE)Linking $(NAME)...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)
 	@echo "$(GREEN)✓ $(NAME) created successfully!$(RESET)"
@@ -112,8 +114,8 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR)
 	@echo "$(GREEN)✓ libft built successfully!$(RESET)"
 
-# Build minilibx (if needed)
-$(MLX_DIR):
+# Build minilibx
+$(MLX_LIB):
 	@echo "$(BLUE)Building minilibx...$(RESET)"
 	@make -C $(MLX_DIR)
 	@echo "$(GREEN)✓ minilibx built successfully!$(RESET)"
@@ -123,6 +125,7 @@ clean:
 	@echo "$(RED)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
+	@make -C $(MLX_DIR) clean 2>/dev/null || true
 	@echo "$(GREEN)✓ Object files cleaned!$(RESET)"
 
 # Clean everything
