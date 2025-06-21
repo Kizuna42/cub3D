@@ -6,28 +6,13 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:56:20 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:59:12 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
-typedef struct s_ray
-{
-	double	ray_dir_x;
-	double	ray_dir_y;
-	int		map_x;
-	int		map_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	int		step_x;
-	int		step_y;
-	int		hit;
-	int		side;
-	double	perp_wall_dist;
-}	t_ray;
+
 
 static void	init_ray(t_game *game, t_ray *ray, int x)
 {
@@ -114,7 +99,7 @@ void	cast_rays(t_game *game)
 		calculate_step_and_side_dist(game, &ray);
 		perform_dda(game, &ray);
 		calculate_distance(game, &ray);
-		draw_column(game, x, ray.perp_wall_dist, ray.side);
+		draw_column(game, x, &ray);
 		x++;
 	}
 } 

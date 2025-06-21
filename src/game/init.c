@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:55:08 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:59:51 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	init_game(t_game *game, const char *filename)
 		return (0);
 	init_player_direction(&game->scene.player);
 	if (!platform_init(game))
+		return (0);
+	if (!load_all_textures(game))
 		return (0);
 	return (1);
 }

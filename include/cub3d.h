@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:56:48 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 23:58:55 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,24 @@ typedef struct s_scene
 	t_player	player;
 }	t_scene;
 
+/* Ray structure for raycasting */
+typedef struct s_ray
+{
+	double	ray_dir_x;
+	double	ray_dir_y;
+	int		map_x;
+	int		map_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	int		step_x;
+	int		step_y;
+	int		hit;
+	int		side;
+	double	perp_wall_dist;
+}	t_ray;
+
 /* Main game structure */
 typedef struct s_game
 {
@@ -152,8 +170,14 @@ void	handle_movement(t_game *game);
 /* Rendering */
 void	render_frame(t_game *game);
 void	cast_rays(t_game *game);
-void	draw_column(t_game *game, int x, double wall_dist, int side);
+void	draw_column(t_game *game, int x, t_ray *ray);
 void	put_pixel(t_game *game, int x, int y, int color);
+
+/* Textures */
+int		load_texture(t_game *game, t_texture *texture, char *path);
+int		load_all_textures(t_game *game);
+int		get_texture_color(t_texture *texture, int x, int y);
+int		get_wall_texture_index(t_ray *ray);
 
 /* Utils */
 void	error_exit(const char *message);
