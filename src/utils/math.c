@@ -6,22 +6,32 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:29:30 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:35:36 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
-int	create_rgb(int r, int g, int b)
+double	ft_abs(double x)
 {
-	return (r << 16 | g << 8 | b);
+	if (x < 0)
+		return (-x);
+	return (x);
 }
 
-double	normalize_angle(double angle)
+double	ft_sqrt(double x)
 {
-	while (angle < 0)
-		angle += TWO_PI;
-	while (angle >= TWO_PI)
-		angle -= TWO_PI;
-	return (angle);
-} 
+	double	result;
+	double	prev;
+
+	if (x < 0)
+		return (-1);
+	result = x / 2;
+	prev = 0;
+	while (ft_abs(result - prev) > 0.000001)
+	{
+		prev = result;
+		result = (result + x / result) / 2;
+	}
+	return (result);
+}

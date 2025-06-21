@@ -6,24 +6,28 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:33:29 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:21:34 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
-void	error_exit(const char *message)
+void	error_msg(char *msg)
 {
-	ft_putendl_fd((char *)message, STDERR_FILENO);
-	exit(1);
+	ft_putstr_fd("Error\n", STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);
 }
 
-void	*safe_malloc(size_t size)
+void	cleanup_and_exit(t_game *game, char *msg)
 {
-	void	*ptr;
+	int	exit_code;
 
-	ptr = malloc(size);
-	if (!ptr)
-		error_exit(ERR_MALLOC);
-	return (ptr);
-} 
+	exit_code = 1;
+	if (msg)
+	{
+		error_msg(msg);
+		exit_code = 1;
+	}
+	cleanup_game(game);
+	exit(exit_code);
+}

@@ -6,48 +6,23 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:51:30 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:31:19 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
-static int	is_valid_map_char(char c)
+static int	count_map_lines(char **lines, int start)
 {
-	return (c == '0' || c == '1' || c == 'N' || c == 'S'
-		|| c == 'E' || c == 'W' || c == ' ');
+	int	count;
+
+	count = 0;
+	while (lines[start + count])
+		count++;
+	return (count);
 }
 
-static int	find_player(char **grid, int height, t_player *player)
-{
-	int	y;
-	int	x;
-	int	player_count;
-
-	player_count = 0;
-	y = 0;
-	while (y < height)
-	{
-		x = 0;
-		while (grid[y][x])
-		{
-			if (grid[y][x] == 'N' || grid[y][x] == 'S'
-				|| grid[y][x] == 'E' || grid[y][x] == 'W')
-			{
-				player->pos.x = x + 0.5;
-				player->pos.y = y + 0.5;
-				player->spawn_dir = grid[y][x];
-				grid[y][x] = '0';
-				player_count++;
-			}
-			x++;
-		}
-		y++;
-	}
-	return (player_count == 1);
-}
-
-static int	get_map_width(char **lines, int height)
+static int	get_max_width(char **lines, int start, int count)
 {
 	int	max_width;
 	int	width;
@@ -55,9 +30,9 @@ static int	get_map_width(char **lines, int height)
 
 	max_width = 0;
 	i = 0;
-	while (i < height)
+	while (i < count)
 	{
-		width = ft_strlen(lines[i]);
+		width = ft_strlen(lines[start + i]);
 		if (width > max_width)
 			max_width = width;
 		i++;
@@ -65,34 +40,66 @@ static int	get_map_width(char **lines, int height)
 	return (max_width);
 }
 
-int	parse_map_from_lines(char **lines, t_scene *scene)
+static int	set_player_position(t_scene *scene, int x, int y, char dir)
 {
+	if (scene->player.spawn_dir != 0)
+		return (error_msg("Multiple player positions found"), 0);
+	scene->player.pos.x = x + 0.5;
+	scene->player.pos.y = y + 0.5;
+	scene->player.spawn_dir = dir;
+	return (1);
+}
+
+static int	process_map_char(t_scene *scene, char c, int x, int y)
+{
+	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
+	{
+		if (!set_player_position(scene, x, y, c))
+			return (0);
+		scene->map[y][x] = '0';
+	}
+	else if (c == '0' || c == '1' || c == ' ')
+		scene->map[y][x] = c;
+	else
+		return (error_msg("Invalid character in map"), 0);
+	return (1);
+}
+
+int	parse_map_data(char **lines, t_scene *scene, int start_line)
+{
+	int	count;
+	int	max_width;
 	int	i;
 	int	j;
 
-	scene->map.height = 0;
-	while (lines[scene->map.height])
-		scene->map.height++;
-	if (scene->map.height == 0)
-		return (0);
-	scene->map.width = get_map_width(lines, scene->map.height);
-	scene->map.grid = safe_malloc(sizeof(char *) * (scene->map.height + 1));
+	count = count_map_lines(lines, start_line);
+	max_width = get_max_width(lines, start_line, count);
+	scene->map_height = count;
+	scene->map_width = max_width;
+	scene->map = malloc(sizeof(char *) * (count + 1));
+	if (!scene->map)
+		return (error_msg("Memory allocation failed"), 0);
 	i = 0;
-	while (i < scene->map.height)
+	while (i < count)
 	{
-		scene->map.grid[i] = safe_malloc(sizeof(char) * (scene->map.width + 1));
+		scene->map[i] = malloc(sizeof(char) * (max_width + 1));
+		if (!scene->map[i])
+			return (error_msg("Memory allocation failed"), 0);
 		j = 0;
-		while (j < scene->map.width)
+		while (j < max_width)
 		{
-			if (j < (int)ft_strlen(lines[i]) && is_valid_map_char(lines[i][j]))
-				scene->map.grid[i][j] = lines[i][j];
+			if (j < (int)ft_strlen(lines[start_line + i]))
+			{
+				if (!process_map_char(scene, lines[start_line + i][j], j, i))
+					return (0);
+			}
 			else
-				scene->map.grid[i][j] = ' ';
+				scene->map[i][j] = ' ';
 			j++;
 		}
-		scene->map.grid[i][j] = '\0';
+		scene->map[i][max_width] = '\0';
 		i++;
 	}
-	scene->map.grid[i] = NULL;
-	return (find_player(scene->map.grid, scene->map.height, &scene->player));
-} 
+	scene->map[count] = NULL;
+	return (1);
+}

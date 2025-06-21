@@ -6,50 +6,51 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:58:31 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:29:47 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
-#include "../../lib/minilibx_opengl_20191021/mlx.h"
 
 int	load_texture(t_game *game, t_texture *texture, char *path)
 {
 	texture->img = mlx_xpm_file_to_image(game->mlx, path,
 			&texture->width, &texture->height);
 	if (!texture->img)
-		return (0);
-	texture->addr = mlx_get_data_addr(texture->img, &texture->bits_per_pixel,
-			&texture->line_length, &texture->endian);
-	texture->path = ft_strdup(path);
+		return (error_msg("Failed to load texture"), 0);
+	texture->addr = mlx_get_data_addr(texture->img,
+			&texture->bits_per_pixel, &texture->line_length, &texture->endian);
+	if (!texture->addr)
+		return (error_msg("Failed to get texture data"), 0);
 	return (1);
 }
 
 int	load_all_textures(t_game *game)
 {
-	if (!load_texture(game, &game->scene.textures[NORTH],
-			game->scene.textures[NORTH].path))
+	if (!load_texture(game, &game->scene.textures[0],
+			game->scene.north_texture))
 		return (0);
-	if (!load_texture(game, &game->scene.textures[SOUTH],
-			game->scene.textures[SOUTH].path))
+	if (!load_texture(game, &game->scene.textures[1],
+			game->scene.south_texture))
 		return (0);
-	if (!load_texture(game, &game->scene.textures[WEST],
-			game->scene.textures[WEST].path))
+	if (!load_texture(game, &game->scene.textures[2],
+			game->scene.west_texture))
 		return (0);
-	if (!load_texture(game, &game->scene.textures[EAST],
-			game->scene.textures[EAST].path))
+	if (!load_texture(game, &game->scene.textures[3],
+			game->scene.east_texture))
 		return (0);
 	return (1);
 }
 
-int	get_texture_color(t_texture *texture, int x, int y)
+unsigned int	get_texture_color(t_texture *texture, int x, int y)
 {
 	char	*dst;
 
 	if (x < 0 || x >= texture->width || y < 0 || y >= texture->height)
 		return (0);
-	dst = texture->addr + (y * texture->line_length + x * (texture->bits_per_pixel / 8));
-	return (*(unsigned int*)dst);
+	dst = texture->addr + (y * texture->line_length
+			+ x * (texture->bits_per_pixel / 8));
+	return (*(unsigned int *)dst);
 }
 
 int	get_wall_texture_index(t_ray *ray)
@@ -57,15 +58,28 @@ int	get_wall_texture_index(t_ray *ray)
 	if (ray->side == 0)
 	{
 		if (ray->ray_dir_x > 0)
-			return (EAST);
+			return (3);
 		else
-			return (WEST);
+			return (2);
 	}
 	else
 	{
 		if (ray->ray_dir_y > 0)
-			return (SOUTH);
+			return (1);
 		else
-			return (NORTH);
+			return (0);
 	}
-} 
+}
+
+void	cleanup_textures(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		if (game->scene.textures[i].img)
+			mlx_destroy_image(game->mlx, game->scene.textures[i].img);
+		i++;
+	}
+}

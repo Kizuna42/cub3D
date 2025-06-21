@@ -6,43 +6,39 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:00:44 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:39:47 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
-#include "../../lib/minilibx_opengl_20191021/mlx.h"
 
-static void	cleanup_textures(t_game *game)
+static void	cleanup_map(t_scene *scene)
 {
 	int	i;
 
-	i = 0;
-	while (i < 4)
-	{
-		if (game->scene.textures[i].img)
-			mlx_destroy_image(game->mlx, game->scene.textures[i].img);
-		if (game->scene.textures[i].path)
-			free(game->scene.textures[i].path);
-		i++;
-	}
-}
-
-static void	cleanup_map(t_map *map)
-{
-	int	i;
-
-	if (!map->grid)
+	if (!scene->map)
 		return ;
 	i = 0;
-	while (i < map->height)
+	while (i < scene->map_height)
 	{
-		if (map->grid[i])
-			free(map->grid[i]);
+		if (scene->map[i])
+			free(scene->map[i]);
 		i++;
 	}
-	free(map->grid);
-	map->grid = NULL;
+	free(scene->map);
+	scene->map = NULL;
+}
+
+static void	cleanup_texture_paths(t_scene *scene)
+{
+	if (scene->north_texture)
+		free(scene->north_texture);
+	if (scene->south_texture)
+		free(scene->south_texture);
+	if (scene->west_texture)
+		free(scene->west_texture);
+	if (scene->east_texture)
+		free(scene->east_texture);
 }
 
 void	cleanup_game(t_game *game)
@@ -50,6 +46,10 @@ void	cleanup_game(t_game *game)
 	if (!game)
 		return ;
 	cleanup_textures(game);
-	cleanup_map(&game->scene.map);
-	platform_cleanup(game);
+	cleanup_texture_paths(&game->scene);
+	cleanup_map(&game->scene);
+	if (game->img)
+		mlx_destroy_image(game->mlx, game->img);
+	if (game->win)
+		mlx_destroy_window(game->mlx, game->win);
 }

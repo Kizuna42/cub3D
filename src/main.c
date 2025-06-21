@@ -6,45 +6,59 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/21 23:26:51 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:21:27 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-static int	validate_arguments(int argc, char **argv)
+static int	validate_args(int argc, char **argv)
 {
-	int		len;
-	char	*filename;
+	char	*extension;
 
 	if (argc != 2)
-	{
-		ft_putendl_fd(ERR_USAGE, STDERR_FILENO);
-		return (0);
-	}
-	filename = argv[1];
-	len = ft_strlen(filename);
-	if (len < 4 || ft_strncmp(filename + len - 4, ".cub", 4) != 0)
-	{
-		ft_putendl_fd(ERR_FILE_EXT, STDERR_FILENO);
-		return (0);
-	}
+		return (error_msg("Usage: ./cub3D <map.cub>"), 0);
+	extension = ft_strrchr(argv[1], '.');
+	if (!extension || ft_strncmp(extension, ".cub", 4) != 0)
+		return (error_msg("Error: Map file must have .cub extension"), 0);
 	return (1);
+}
+
+static int	main_loop_hook(t_game *game)
+{
+	handle_movement(game);
+	render_frame(game);
+	return (0);
+}
+
+static int	close_window(t_game *game)
+{
+	cleanup_game(game);
+	exit(0);
+	return (0);
+}
+
+static int	key_press(int keycode, t_game *game)
+{
+	if (keycode == KEY_ESC)
+	{
+		cleanup_game(game);
+		exit(0);
+	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_game	game;
 
-	if (!validate_arguments(argc, argv))
+	if (!validate_args(argc, argv))
 		return (1);
-	ft_memset(&game, 0, sizeof(t_game));
 	if (!init_game(&game, argv[1]))
-	{
-		cleanup_game(&game);
 		return (1);
-	}
-	game_loop(&game);
-	cleanup_game(&game);
+	mlx_loop_hook(game.mlx, main_loop_hook, &game);
+	mlx_hook(game.win, 17, 0, close_window, &game);
+	mlx_key_hook(game.win, key_press, &game);
+	mlx_loop(game.mlx);
 	return (0);
 }

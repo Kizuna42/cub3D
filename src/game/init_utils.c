@@ -1,36 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*   init_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:31:00 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/22 00:37:51 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
-int	is_valid_identifier(char *line)
+void	set_north_south_direction(t_player *player)
 {
-	if (ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
-		|| ft_strncmp(line, "WE ", 3) == 0 || ft_strncmp(line, "EA ", 3) == 0
-		|| ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
-		return (1);
-	return (0);
+	if (player->spawn_dir == 'N')
+	{
+		player->dir.x = 0;
+		player->dir.y = -1;
+		player->plane.x = 0.66;
+		player->plane.y = 0;
+	}
+	else if (player->spawn_dir == 'S')
+	{
+		player->dir.x = 0;
+		player->dir.y = 1;
+		player->plane.x = -0.66;
+		player->plane.y = 0;
+	}
 }
 
-int	is_empty_line(char *line)
+void	set_east_west_direction(t_player *player)
 {
-	int	i;
-
-	i = 0;
-	while (line[i])
+	if (player->spawn_dir == 'E')
 	{
-		if (!ft_isspace(line[i]))
-			return (0);
-		i++;
+		player->dir.x = 1;
+		player->dir.y = 0;
+		player->plane.x = 0;
+		player->plane.y = 0.66;
 	}
-	return (1);
+	else if (player->spawn_dir == 'W')
+	{
+		player->dir.x = -1;
+		player->dir.y = 0;
+		player->plane.x = 0;
+		player->plane.y = -0.66;
+	}
 }
