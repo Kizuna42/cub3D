@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 19:10:50 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 19:13:26 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@
 // # include "mlx.h" 
 
 // --- Project Headers ---
-// Will be added as the project grows
-// # include "parser.h"
+// # include "parser.h" // Removed to break circular dependency
+
+// --- Forward Declarations ---
+struct s_game;
 
 // --- Constants ---
 # define SCREEN_WIDTH 1280
@@ -91,6 +93,6 @@ typedef struct s_game
 }	t_game;
 
 // --- Function Prototypes ---
-int	parse_map_file(t_game *game, const char *filename);
+// Moved to respective modules
 
 #endif 

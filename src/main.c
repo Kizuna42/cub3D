@@ -6,11 +6,12 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/21 19:11:03 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/06/21 19:13:58 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "parser.h"
 
 static void	init_game_struct(t_game *game)
 {
