@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:29:47 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/01 19:29:55 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ int	get_wall_texture_index(t_ray *ray)
 	if (ray->side == 0)
 	{
 		if (ray->ray_dir_x > 0)
-			return (3);
-		else
 			return (2);
+		else
+			return (3);
 	}
 	else
 	{
 		if (ray->ray_dir_y > 0)
-			return (1);
-		else
 			return (0);
+		else
+			return (1);
 	}
 }
 
