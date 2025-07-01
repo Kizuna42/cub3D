@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 03:39:24 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/01 23:35:52 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@
 # include "../lib/libft/libft.h"
 
 /* Platform-specific MLX includes */
-# ifdef __APPLE__
-#  include "../lib/minilibx_opengl_20191021/mlx.h"
-# else
-#  include "../lib/minilibx-linux/mlx.h"
-# endif
+# include "../lib/minilibx-linux/mlx.h"
 
 # include "keycodes.h"
 

@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/06/22 03:20:32 by kizuna           ###   ########.fr        #
+#    Updated: 2025/07/01 23:37:09 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ LIB_DIR = lib
 LIBFT_DIR = $(LIB_DIR)/libft
 
 # OS Detection
-UNAME_S := $(shell uname -s)
+-UNAME_S := $(shell uname -s)
 
 # Core source files
 CORE_SRCS = main.c \
@@ -55,31 +55,12 @@ CORE_SRCS = main.c \
 			utils/math.c \
 			utils/libft_utils.c
 
-# Platform-specific source files
-ifeq ($(UNAME_S), Darwin)
-	PLATFORM_SRCS = platform/macos/platform_hooks.c platform/macos/platform_close.c
-else
-	PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_close.c
-endif
-
-# Add src directory prefix to core sources
+PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_close.c
 SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS)) $(PLATFORM_SRCS)
 OBJS = $(addprefix $(OBJ_DIR)/, $(CORE_SRCS:.c=.o)) $(PLATFORM_SRCS:%.c=$(OBJ_DIR)/%.o)
-
-# Platform-specific settings
-ifeq ($(UNAME_S), Darwin)
-	# macOS
-	MLX_DIR = $(LIB_DIR)/minilibx_opengl_20191021
-	MLX_LIB = $(MLX_DIR)/libmlx.a
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
-	MLX_INCLUDES = -I$(MLX_DIR)
-else
-	# Linux (assuming anything else is Linux)
-	MLX_DIR = $(LIB_DIR)/minilibx-linux
-	MLX_LIB = $(MLX_DIR)/libmlx.a
-	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
-	MLX_INCLUDES = -I$(MLX_DIR)
-endif
+MLX_DIR = $(LIB_DIR)/minilibx-linux
+MLX_LIB = $(MLX_DIR)/libmlx.a
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
 
 # Libraries
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -120,11 +101,7 @@ $(LIBFT):
 # Build minilibx
 $(MLX_LIB):
 	@echo "$(BLUE)Building minilibx...$(RESET)"
-ifeq ($(UNAME_S), Darwin)
-	@make -C $(MLX_DIR)
-else
 	@make -C $(MLX_DIR) || (echo "$(YELLOW)Warning: minilibx test build failed, checking if library exists...$(RESET)" && test -f $(MLX_LIB))
-endif
 	@echo "$(GREEN)✓ minilibx built successfully!$(RESET)"
 
 # Clean object files
@@ -132,11 +109,7 @@ clean:
 	@echo "$(RED)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
-ifeq ($(UNAME_S), Darwin)
-	@make -C $(MLX_DIR) clean 2>/dev/null || true
-else
 	@(cd $(MLX_DIR) && ./configure clean) 2>/dev/null || true
-endif
 	@echo "$(GREEN)✓ Object files cleaned!$(RESET)"
 
 # Clean everything
@@ -144,11 +117,7 @@ fclean: clean
 	@echo "$(RED)Cleaning executable and libraries...$(RESET)"
 	@rm -f $(NAME)
 	@make -C $(LIBFT_DIR) fclean
-ifeq ($(UNAME_S), Darwin)
-	@make -C $(MLX_DIR) clean 2>/dev/null || true
-else
 	@(cd $(MLX_DIR) && ./configure clean) 2>/dev/null || true
-endif
 	@echo "$(GREEN)✓ Everything cleaned!$(RESET)"
 
 # Rebuild everything
