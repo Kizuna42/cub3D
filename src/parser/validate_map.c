@@ -22,9 +22,9 @@ static int	validate_required_elements(t_scene *scene)
 		return (error_msg("Missing west texture (WE)"), 0);
 	if (!scene->east_texture)
 		return (error_msg("Missing east texture (EA)"), 0);
-	if (scene->floor_color == -1)
+	if (!scene->has_floor)
 		return (error_msg("Missing floor color (F)"), 0);
-	if (scene->ceiling_color == -1)
+	if (!scene->has_ceiling)
 		return (error_msg("Missing ceiling color (C)"), 0);
 	return (1);
 }
@@ -74,8 +74,15 @@ static int	validate_walkable_area(t_scene *scene)
 
 static int	validate_player_position(t_scene *scene)
 {
+	int	x;
+	int	y;
+
 	if (scene->player.spawn_dir == 0)
 		return (error_msg("No player position found"), 0);
+	x = (int)scene->player.pos.x;
+	y = (int)scene->player.pos.y;
+	if (is_border_position(x, y, scene))
+		return (error_msg("Player cannot be on map border"), 0);
 	return (1);
 }
 
@@ -85,6 +92,8 @@ int	validate_map(t_scene *scene)
 		return (0);
 	if (!scene->map || scene->map_height == 0 || scene->map_width == 0)
 		return (error_msg("Invalid map dimensions"), 0);
+	if (scene->map_height < 3 || scene->map_width < 3)
+		return (error_msg("Map too small (minimum 3x3)"), 0);
 	if (!validate_player_position(scene))
 		return (0);
 	if (!validate_walkable_area(scene))

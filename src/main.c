@@ -22,8 +22,8 @@ static int	validate_args(int argc, char **argv)
 	if (!argv[1] || ft_strlen(argv[1]) < 5)
 		return (error_msg("Invalid filename"), 0);
 	extension = ft_strrchr(argv[1], '.');
-	if (!extension || ft_strncmp(extension, ".cub", 4) != 0
-		|| ft_strlen(extension) != 4)
+	if (!extension || ft_strncmp(extension, ".cub", 5) != 0
+		|| extension[4] != '\0')
 		return (error_msg("Map file must have .cub extension"), 0);
 	if (ft_strnstr(argv[1], "../", ft_strlen(argv[1])))
 		return (error_msg("Path traversal not allowed"), 0);

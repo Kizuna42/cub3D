@@ -76,6 +76,8 @@ int	init_game(t_game *game, const char *filename)
 	ft_memset(&game->scene, 0, sizeof(t_scene));
 	game->scene.floor_color = -1;
 	game->scene.ceiling_color = -1;
+	game->scene.has_floor = 0;
+	game->scene.has_ceiling = 0;
 	if (!parse_file(filename, &game->scene))
 		return (0);
 	init_player_direction(&game->scene.player);

@@ -34,7 +34,7 @@ int	process_config_line(char *line, t_scene *scene)
 static int	process_map_section(char **lines, t_scene *scene, int map_start)
 {
 	if (map_start == -1)
-		return (1);
+		return (error_msg("No map found in file"), 0);
 	if (!parse_map_data(lines, scene, map_start))
 		return (0);
 	if (!validate_post_map_lines(lines, map_start, scene->map_height))
