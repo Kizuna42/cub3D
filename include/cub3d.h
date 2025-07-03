@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/01 23:35:52 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/03 19:33:09 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,5 +219,11 @@ void			draw_minimap_player(t_game *game);
 void			draw_minimap_square(t_game *game, int x, int y, int size);
 void			draw_minimap_square_color(t_game *game, int x, int y,
 					int color);
+
+/* Validation utilities */
+int				validate_required_elements(t_scene *scene);
+int				is_border_position(int x, int y, t_scene *scene);
+int				check_position(int x, int y, t_scene *scene);
+int				validate_player_position(t_scene *scene);
 
 #endif

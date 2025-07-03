@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/07/01 23:37:09 by kizuna           ###   ########.fr        #
+#    Updated: 2025/07/03 19:33:44 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ CORE_SRCS = main.c \
 			parser/parse_textures.c \
 			parser/parse_colors.c \
 			parser/validate_map.c \
+			parser/validate_map_utils.c \
 			game/init.c \
 			game/init_utils.c \
 			game/game_loop.c \
