@@ -30,17 +30,20 @@ int	is_color_line(char *line)
 int	is_map_line(char *line)
 {
 	int	i;
+	int	has_map_char;
 
 	i = 0;
+	has_map_char = 0;
 	while (line[i])
 	{
-		if (line[i] != '0' && line[i] != '1' && line[i] != ' '
-			&& line[i] != 'N' && line[i] != 'S' && line[i] != 'E'
-			&& line[i] != 'W')
+		if (line[i] == '0' || line[i] == '1' || line[i] == 'N'
+			|| line[i] == 'S' || line[i] == 'E' || line[i] == 'W')
+			has_map_char = 1;
+		else if (line[i] != ' ' && line[i] != '\t')
 			return (0);
 		i++;
 	}
-	return (1);
+	return (has_map_char);
 }
 
 int	validate_post_map_lines(char **lines, int map_start, int map_count)
@@ -67,19 +70,35 @@ int	validate_post_map_lines(char **lines, int map_start, int map_count)
 
 int	process_lines(char **lines, t_scene *scene, int *map_start)
 {
-	int	i;
+	int		i;
+	char	*trimmed;
 
 	i = 0;
 	*map_start = -1;
 	while (lines[i])
 	{
+		trimmed = ft_strtrim(lines[i], " \t\n\r");
+		if (!trimmed)
+			return (0);
+		if (ft_strlen(trimmed) == 0)
+		{
+			free(trimmed);
+			i++;
+			continue;
+		}
 		if (*map_start == -1 && is_map_line(lines[i]))
 			*map_start = i;
 		else if (*map_start == -1)
 		{
 			if (!process_config_line(lines[i], scene))
-				return (0);
+				return (free(trimmed), 0);
 		}
+		else if (*map_start != -1)
+		{
+			if (is_texture_line(trimmed) || is_color_line(trimmed))
+				return (free(trimmed), error_msg("Invalid element order: map must come after all texture and color definitions"), 0);
+		}
+		free(trimmed);
 		i++;
 	}
 	return (1);
