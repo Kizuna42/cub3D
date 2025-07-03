@@ -42,12 +42,35 @@ static int	process_map_section(char **lines, t_scene *scene, int map_start)
 	return (1);
 }
 
+static int	process_file_content(char **lines, t_scene *scene)
+{
+	int	map_start;
+
+	if (!process_lines(lines, scene, &map_start))
+	{
+		cleanup_texture_paths(scene);
+		return (0);
+	}
+	if (!process_map_section(lines, scene, map_start))
+	{
+		cleanup_texture_paths(scene);
+		cleanup_map(scene);
+		return (0);
+	}
+	if (!validate_map(scene))
+	{
+		cleanup_texture_paths(scene);
+		cleanup_map(scene);
+		return (0);
+	}
+	return (1);
+}
+
 int	parse_file(const char *filename, t_scene *scene)
 {
 	int		fd;
 	char	*file_content;
 	char	**lines;
-	int		map_start;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -60,10 +83,8 @@ int	parse_file(const char *filename, t_scene *scene)
 	free(file_content);
 	if (!lines)
 		return (error_msg("Cannot split file content"), 0);
-	if (!process_lines(lines, scene, &map_start))
-		return (ft_free_split(lines), 0);
-	if (!process_map_section(lines, scene, map_start))
+	if (!process_file_content(lines, scene))
 		return (ft_free_split(lines), 0);
 	ft_free_split(lines);
-	return (validate_map(scene));
+	return (1);
 }

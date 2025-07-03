@@ -15,12 +15,22 @@
 static int	validate_args(int argc, char **argv)
 {
 	char	*extension;
+	int		fd;
 
 	if (argc != 2)
 		return (error_msg("Usage: ./cub3D <map.cub>"), 0);
+	if (!argv[1] || ft_strlen(argv[1]) < 5)
+		return (error_msg("Invalid filename"), 0);
 	extension = ft_strrchr(argv[1], '.');
-	if (!extension || ft_strncmp(extension, ".cub", 4) != 0)
+	if (!extension || ft_strncmp(extension, ".cub", 4) != 0
+		|| ft_strlen(extension) != 4)
 		return (error_msg("Map file must have .cub extension"), 0);
+	if (ft_strnstr(argv[1], "../", ft_strlen(argv[1])))
+		return (error_msg("Path traversal not allowed"), 0);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		return (error_msg("Cannot open map file"), 0);
+	close(fd);
 	return (1);
 }
 

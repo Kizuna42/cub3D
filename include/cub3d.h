@@ -175,6 +175,8 @@ void			free_partial_map(t_scene *scene, int allocated_rows);
 /* Game */
 int				init_game(t_game *game, const char *filename);
 void			cleanup_game(t_game *game);
+void			cleanup_texture_paths(t_scene *scene);
+void			cleanup_map(t_scene *scene);
 void			handle_movement(t_game *game);
 int				game_loop(t_game *game);
 

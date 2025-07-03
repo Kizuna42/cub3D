@@ -12,6 +12,25 @@
 
 #include "../../include/cub3d.h"
 
+static int	validate_texture_file(char *path)
+{
+	char	*extension;
+	int		fd;
+
+	if (!path || ft_strlen(path) == 0)
+		return (error_msg("Empty texture path"), 0);
+	extension = ft_strrchr(path, '.');
+	if (!extension || ft_strncmp(extension, ".xpm", 4) != 0)
+		return (error_msg("Texture must have .xpm extension"), 0);
+	if (ft_strnstr(path, "../", ft_strlen(path)))
+		return (error_msg("Path traversal not allowed"), 0);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (error_msg("Texture file not found or not readable"), 0);
+	close(fd);
+	return (1);
+}
+
 static int	set_texture_path(char **target, char *path)
 {
 	if (*target)
@@ -21,6 +40,8 @@ static int	set_texture_path(char **target, char *path)
 		error_msg("Duplicate texture definition");
 		return (0);
 	}
+	if (!validate_texture_file(path))
+		return (0);
 	*target = ft_strdup(path);
 	if (!*target)
 		return (error_msg("Memory allocation failed"), 0);

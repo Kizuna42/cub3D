@@ -12,7 +12,7 @@
 
 #include "../../include/cub3d.h"
 
-static void	cleanup_map(t_scene *scene)
+void	cleanup_map(t_scene *scene)
 {
 	int	i;
 
@@ -29,16 +29,28 @@ static void	cleanup_map(t_scene *scene)
 	scene->map = NULL;
 }
 
-static void	cleanup_texture_paths(t_scene *scene)
+void	cleanup_texture_paths(t_scene *scene)
 {
 	if (scene->north_texture)
+	{
 		free(scene->north_texture);
+		scene->north_texture = NULL;
+	}
 	if (scene->south_texture)
+	{
 		free(scene->south_texture);
+		scene->south_texture = NULL;
+	}
 	if (scene->west_texture)
+	{
 		free(scene->west_texture);
+		scene->west_texture = NULL;
+	}
 	if (scene->east_texture)
+	{
 		free(scene->east_texture);
+		scene->east_texture = NULL;
+	}
 }
 
 void	cleanup_game(t_game *game)

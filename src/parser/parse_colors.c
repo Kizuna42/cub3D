@@ -12,19 +12,44 @@
 
 #include "../../include/cub3d.h"
 
-static int	is_valid_number_string(char *str)
+static int	convert_to_number(char *trimmed, int *result)
 {
-	int	i;
+	long	num;
+	int		i;
 
-	if (!str || !*str)
-		return (0);
+	num = 0;
 	i = 0;
-	while (str[i])
+	while (trimmed[i])
 	{
-		if (!ft_isdigit(str[i]) && str[i] != ' ' && str[i] != '\t')
+		num = num * 10 + (trimmed[i] - '0');
+		if (num > 255)
 			return (0);
 		i++;
 	}
+	*result = (int)num;
+	return (1);
+}
+
+static int	safe_atoi(char *str, int *result)
+{
+	int		i;
+	char	*trimmed;
+
+	trimmed = ft_strtrim(str, " \t");
+	if (!trimmed)
+		return (0);
+	if (ft_strlen(trimmed) > 3 || ft_strlen(trimmed) == 0)
+		return (free(trimmed), 0);
+	i = 0;
+	while (trimmed[i])
+	{
+		if (!ft_isdigit(trimmed[i]))
+			return (free(trimmed), 0);
+		i++;
+	}
+	if (!convert_to_number(trimmed, result))
+		return (free(trimmed), 0);
+	free(trimmed);
 	return (1);
 }
 
@@ -47,18 +72,14 @@ static int	parse_rgb_values(char *str, t_color *color)
 	if (i != 3)
 		return (ft_free_split(rgb_parts),
 			error_msg("RGB must have exactly 3 values"), 0);
-	if (!is_valid_number_string(rgb_parts[0])
-		|| !is_valid_number_string(rgb_parts[1])
-		|| !is_valid_number_string(rgb_parts[2]))
-		return (ft_free_split(rgb_parts),
-			error_msg("RGB values must contain only digits"), 0);
-	color->r = ft_atoi(rgb_parts[0]);
-	color->g = ft_atoi(rgb_parts[1]);
-	color->b = ft_atoi(rgb_parts[2]);
+	if (!safe_atoi(rgb_parts[0], &color->r)
+		|| !safe_atoi(rgb_parts[1], &color->g)
+		|| !safe_atoi(rgb_parts[2], &color->b))
+	{
+		ft_free_split(rgb_parts);
+		return (error_msg("Invalid RGB values"), 0);
+	}
 	ft_free_split(rgb_parts);
-	if (!validate_rgb_value(color->r) || !validate_rgb_value(color->g)
-		|| !validate_rgb_value(color->b))
-		return (error_msg("RGB values must be between 0 and 255"), 0);
 	return (1);
 }
 

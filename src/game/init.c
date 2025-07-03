@@ -74,11 +74,17 @@ static int	init_mlx(t_game *game)
 int	init_game(t_game *game, const char *filename)
 {
 	ft_memset(&game->scene, 0, sizeof(t_scene));
+	game->scene.floor_color = -1;
+	game->scene.ceiling_color = -1;
 	if (!parse_file(filename, &game->scene))
 		return (0);
 	init_player_direction(&game->scene.player);
 	init_minimap(game);
 	if (!init_mlx(game))
+	{
+		cleanup_texture_paths(&game->scene);
+		cleanup_map(&game->scene);
 		return (0);
+	}
 	return (1);
 }

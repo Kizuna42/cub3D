@@ -12,6 +12,23 @@
 
 #include "../../include/cub3d.h"
 
+static int	validate_required_elements(t_scene *scene)
+{
+	if (!scene->north_texture)
+		return (error_msg("Missing north texture (NO)"), 0);
+	if (!scene->south_texture)
+		return (error_msg("Missing south texture (SO)"), 0);
+	if (!scene->west_texture)
+		return (error_msg("Missing west texture (WE)"), 0);
+	if (!scene->east_texture)
+		return (error_msg("Missing east texture (EA)"), 0);
+	if (scene->floor_color == -1)
+		return (error_msg("Missing floor color (F)"), 0);
+	if (scene->ceiling_color == -1)
+		return (error_msg("Missing ceiling color (C)"), 0);
+	return (1);
+}
+
 static int	is_border_position(int x, int y, t_scene *scene)
 {
 	return (x == 0 || y == 0 || x == scene->map_width - 1
@@ -64,6 +81,8 @@ static int	validate_player_position(t_scene *scene)
 
 int	validate_map(t_scene *scene)
 {
+	if (!validate_required_elements(scene))
+		return (0);
 	if (!scene->map || scene->map_height == 0 || scene->map_width == 0)
 		return (error_msg("Invalid map dimensions"), 0);
 	if (!validate_player_position(scene))
