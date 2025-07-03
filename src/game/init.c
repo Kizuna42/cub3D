@@ -64,10 +64,16 @@ static int	init_mlx(t_game *game)
 		game->keys[i] = KEY_RELEASED;
 		i++;
 	}
+	game->mlx = NULL;
+	game->win = NULL;
+	game->img = NULL;
 	if (!platform_init(game))
 		return (error_msg("Platform initialization failed"), 0);
 	if (!load_all_textures(game))
+	{
+		platform_cleanup(game);
 		return (0);
+	}
 	return (1);
 }
 

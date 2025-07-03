@@ -41,18 +41,38 @@ int	load_texture(t_game *game, t_texture *texture, char *path)
 
 int	load_all_textures(t_game *game)
 {
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		game->scene.textures[i].img = NULL;
+		i++;
+	}
 	if (!load_texture(game, &game->scene.textures[0],
 			game->scene.north_texture))
+	{
+		cleanup_textures(game);
 		return (0);
+	}
 	if (!load_texture(game, &game->scene.textures[1],
 			game->scene.south_texture))
+	{
+		cleanup_textures(game);
 		return (0);
+	}
 	if (!load_texture(game, &game->scene.textures[2],
 			game->scene.west_texture))
+	{
+		cleanup_textures(game);
 		return (0);
+	}
 	if (!load_texture(game, &game->scene.textures[3],
 			game->scene.east_texture))
+	{
+		cleanup_textures(game);
 		return (0);
+	}
 	return (1);
 }
 

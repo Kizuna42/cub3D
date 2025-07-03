@@ -53,11 +53,6 @@ static int	safe_atoi(char *str, int *result)
 	return (1);
 }
 
-static int	validate_rgb_value(int value)
-{
-	return (value >= 0 && value <= 255);
-}
-
 static int	parse_rgb_values(char *str, t_color *color)
 {
 	char	**rgb_parts;

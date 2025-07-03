@@ -49,6 +49,7 @@ static int	process_file_content(char **lines, t_scene *scene)
 	if (!process_lines(lines, scene, &map_start))
 	{
 		cleanup_texture_paths(scene);
+		cleanup_map(scene);
 		return (0);
 	}
 	if (!process_map_section(lines, scene, map_start))

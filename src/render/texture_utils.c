@@ -52,11 +52,16 @@ void	cleanup_textures(t_game *game)
 {
 	int	i;
 
+	if (!game || !game->mlx)
+		return ;
 	i = 0;
 	while (i < 4)
 	{
 		if (game->scene.textures[i].img)
+		{
 			mlx_destroy_image(game->mlx, game->scene.textures[i].img);
+			game->scene.textures[i].img = NULL;
+		}
 		i++;
 	}
 }

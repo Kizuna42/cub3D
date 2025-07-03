@@ -49,10 +49,22 @@ int	platform_init(t_game *game)
 		return (0);
 	game->win = mlx_new_window(game->mlx, WIN_WIDTH, WIN_HEIGHT, WIN_TITLE);
 	if (!game->win)
+	{
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		game->mlx = NULL;
 		return (0);
+	}
 	game->img = mlx_new_image(game->mlx, WIN_WIDTH, WIN_HEIGHT);
 	if (!game->img)
+	{
+		mlx_destroy_window(game->mlx, game->win);
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		game->mlx = NULL;
+		game->win = NULL;
 		return (0);
+	}
 	game->addr = mlx_get_data_addr(game->img, &game->bits_per_pixel,
 			&game->line_length, &game->endian);
 	mlx_hook(game->win, 2, 1L << 0, platform_handle_keypress, game);

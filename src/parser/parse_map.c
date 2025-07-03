@@ -66,7 +66,7 @@ int	parse_map_data(char **lines, t_scene *scene, int start_line)
 	{
 		if (!fill_map_line(scene, lines, start_line, i))
 		{
-			free_partial_map(scene, i + 1);
+			free_partial_map(scene, count);
 			return (0);
 		}
 		i++;
