@@ -32,6 +32,7 @@ LIBFT_DIR = $(LIB_DIR)/libft
 CORE_SRCS = main.c \
 			parser/parse_file.c \
 			parser/parse_file_utils.c \
+			parser/parse_validation.c \
 			parser/parser_utils.c \
 			parser/parse_map.c \
 			parser/parse_map_utils.c \
@@ -56,7 +57,7 @@ CORE_SRCS = main.c \
 			utils/math.c \
 			utils/libft_utils.c
 
-PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_close.c
+PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_init.c platform/linux/platform_close.c
 SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS)) $(PLATFORM_SRCS)
 OBJS = $(addprefix $(OBJ_DIR)/, $(CORE_SRCS:.c=.o)) $(PLATFORM_SRCS:%.c=$(OBJ_DIR)/%.o)
 MLX_DIR = $(LIB_DIR)/minilibx-linux

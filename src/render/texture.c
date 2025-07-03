@@ -39,7 +39,7 @@ int	load_texture(t_game *game, t_texture *texture, char *path)
 	return (1);
 }
 
-int	load_all_textures(t_game *game)
+static int	init_texture_array(t_game *game)
 {
 	int	i;
 
@@ -49,25 +49,18 @@ int	load_all_textures(t_game *game)
 		game->scene.textures[i].img = NULL;
 		i++;
 	}
+	return (1);
+}
+
+static int	load_required_textures(t_game *game)
+{
 	if (!load_texture(game, &game->scene.textures[0],
-			game->scene.north_texture))
-	{
-		cleanup_textures(game);
-		return (0);
-	}
-	if (!load_texture(game, &game->scene.textures[1],
-			game->scene.south_texture))
-	{
-		cleanup_textures(game);
-		return (0);
-	}
-	if (!load_texture(game, &game->scene.textures[2],
-			game->scene.west_texture))
-	{
-		cleanup_textures(game);
-		return (0);
-	}
-	if (!load_texture(game, &game->scene.textures[3],
+			game->scene.north_texture)
+		|| !load_texture(game, &game->scene.textures[1],
+			game->scene.south_texture)
+		|| !load_texture(game, &game->scene.textures[2],
+			game->scene.west_texture)
+		|| !load_texture(game, &game->scene.textures[3],
 			game->scene.east_texture))
 	{
 		cleanup_textures(game);
@@ -76,13 +69,8 @@ int	load_all_textures(t_game *game)
 	return (1);
 }
 
-unsigned int	get_texture_color(t_texture *texture, int x, int y)
+int	load_all_textures(t_game *game)
 {
-	char	*dst;
-
-	if (x < 0 || x >= texture->width || y < 0 || y >= texture->height)
-		return (0);
-	dst = texture->addr + (y * texture->line_length
-			+ x * (texture->bits_per_pixel / 8));
-	return (*(unsigned int *)dst);
+	init_texture_array(game);
+	return (load_required_textures(game));
 }
