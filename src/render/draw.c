@@ -12,15 +12,32 @@
 
 #include "../../include/cub3d.h"
 
+static int	convert_color_endian(int color, int endian)
+{
+	int	r;
+	int	g;
+	int	b;
+
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
+	if (endian == 0)
+		return ((r << 16) | (g << 8) | b);
+	else
+		return ((b << 16) | (g << 8) | r);
+}
+
 void	put_pixel(t_game *game, int x, int y, int color)
 {
 	char	*dst;
+	int		final_color;
 
 	if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
 	{
+		final_color = convert_color_endian(color, game->endian);
 		dst = game->addr + (y * game->line_length
 				+ x * (game->bits_per_pixel / 8));
-		*(unsigned int *)dst = color;
+		*(unsigned int *)dst = final_color;
 	}
 }
 

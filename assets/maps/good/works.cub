@@ -1,13 +1,13 @@
-   WE                            textures/wolfenstein/grey_stone.xpm
-NO      textures/wolfenstein/purple_stone.xpm
+   WE                            ./assets/textures/west_wall.xpm
+NO      ./assets/textures/north_wall.xpm
 
 
 
-SO textures/wolfenstein/red_brick.xpm
+SO ./assets/textures/south_wall.xpm
 
 F      17,    38,     64
 
-EA textures/wolfenstein/wood.xpm
+EA ./assets/textures/east_wall.xpm
 
 
 

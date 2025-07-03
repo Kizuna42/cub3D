@@ -40,7 +40,11 @@ int	check_position(int x, int y, t_scene *scene)
 	if (x < 0 || y < 0 || x >= scene->map_width || y >= scene->map_height)
 		return (0);
 	if (scene->map[y][x] == ' ')
-		return (0);
+	{
+		if (is_border_position(x, y, scene))
+			return (0);
+		return (1);
+	}
 	return (1);
 }
 
