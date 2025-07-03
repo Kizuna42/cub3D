@@ -43,6 +43,28 @@ int	is_map_line(char *line)
 	return (1);
 }
 
+int	validate_post_map_lines(char **lines, int map_start, int map_count)
+{
+	int		i;
+	char	*trimmed;
+
+	i = map_start + map_count;
+	while (lines[i])
+	{
+		trimmed = ft_strtrim(lines[i], " \t\n\r");
+		if (!trimmed)
+			return (error_msg("Memory allocation failed"), 0);
+		if (ft_strlen(trimmed) > 0)
+		{
+			free(trimmed);
+			return (error_msg("Invalid data after map"), 0);
+		}
+		free(trimmed);
+		i++;
+	}
+	return (1);
+}
+
 int	process_lines(char **lines, t_scene *scene, int *map_start)
 {
 	int	i;

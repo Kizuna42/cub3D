@@ -20,7 +20,7 @@ static int	validate_args(int argc, char **argv)
 		return (error_msg("Usage: ./cub3D <map.cub>"), 0);
 	extension = ft_strrchr(argv[1], '.');
 	if (!extension || ft_strncmp(extension, ".cub", 4) != 0)
-		return (error_msg("Error: Map file must have .cub extension"), 0);
+		return (error_msg("Map file must have .cub extension"), 0);
 	return (1);
 }
 

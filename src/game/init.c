@@ -67,7 +67,7 @@ static int	init_mlx(t_game *game)
 	if (!platform_init(game))
 		return (error_msg("Platform initialization failed"), 0);
 	if (!load_all_textures(game))
-		return (error_msg("Texture loading failed"), 0);
+		return (0);
 	return (1);
 }
 

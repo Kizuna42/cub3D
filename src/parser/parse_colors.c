@@ -12,6 +12,22 @@
 
 #include "../../include/cub3d.h"
 
+static int	is_valid_number_string(char *str)
+{
+	int	i;
+
+	if (!str || !*str)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]) && str[i] != ' ' && str[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 static int	validate_rgb_value(int value)
 {
 	return (value >= 0 && value <= 255);
@@ -31,6 +47,11 @@ static int	parse_rgb_values(char *str, t_color *color)
 	if (i != 3)
 		return (ft_free_split(rgb_parts),
 			error_msg("RGB must have exactly 3 values"), 0);
+	if (!is_valid_number_string(rgb_parts[0])
+		|| !is_valid_number_string(rgb_parts[1])
+		|| !is_valid_number_string(rgb_parts[2]))
+		return (ft_free_split(rgb_parts),
+			error_msg("RGB values must contain only digits"), 0);
 	color->r = ft_atoi(rgb_parts[0]);
 	color->g = ft_atoi(rgb_parts[1]);
 	color->b = ft_atoi(rgb_parts[2]);
@@ -54,11 +75,15 @@ int	parse_color_line(char *line, t_scene *scene)
 	free(trimmed);
 	if (line[0] == 'F')
 	{
+		if (scene->has_floor)
+			return (error_msg("Duplicate floor color definition"), 0);
 		scene->floor_color = (color.r << 16) | (color.g << 8) | color.b;
 		scene->has_floor = 1;
 	}
 	else if (line[0] == 'C')
 	{
+		if (scene->has_ceiling)
+			return (error_msg("Duplicate ceiling color definition"), 0);
 		scene->ceiling_color = (color.r << 16) | (color.g << 8) | color.b;
 		scene->has_ceiling = 1;
 	}

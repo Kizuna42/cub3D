@@ -27,14 +27,10 @@ int	process_map_char(t_scene *scene, char c, int x, int y)
 	return (1);
 }
 
-int	parse_map_data(char **lines, t_scene *scene, int start_line)
+static int	allocate_map_memory(t_scene *scene, int count, int max_width)
 {
-	int	count;
-	int	max_width;
 	int	i;
 
-	count = count_map_lines(lines, start_line);
-	max_width = get_max_width(lines, start_line, count);
 	scene->map_height = count;
 	scene->map_width = max_width;
 	scene->map = malloc(sizeof(char *) * (count + 1));
@@ -45,11 +41,35 @@ int	parse_map_data(char **lines, t_scene *scene, int start_line)
 	{
 		scene->map[i] = malloc(sizeof(char) * (max_width + 1));
 		if (!scene->map[i])
+		{
+			free_partial_map(scene, i);
 			return (error_msg("Memory allocation failed"), 0);
-		if (!fill_map_line(scene, lines, start_line, i))
-			return (0);
+		}
 		i++;
 	}
 	scene->map[count] = NULL;
+	return (1);
+}
+
+int	parse_map_data(char **lines, t_scene *scene, int start_line)
+{
+	int	count;
+	int	max_width;
+	int	i;
+
+	count = count_map_lines(lines, start_line);
+	max_width = get_max_width(lines, start_line, count);
+	if (!allocate_map_memory(scene, count, max_width))
+		return (0);
+	i = 0;
+	while (i < count)
+	{
+		if (!fill_map_line(scene, lines, start_line, i))
+		{
+			free_partial_map(scene, i + 1);
+			return (0);
+		}
+		i++;
+	}
 	return (1);
 }

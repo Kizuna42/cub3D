@@ -163,11 +163,14 @@ int				is_color_line(char *line);
 int				is_map_line(char *line);
 int				process_lines(char **lines, t_scene *scene, int *map_start);
 int				process_config_line(char *line, t_scene *scene);
+int				validate_post_map_lines(char **lines, int map_start,
+					int map_count);
 int				count_map_lines(char **lines, int start);
 int				get_max_width(char **lines, int start, int count);
 int				fill_map_line(t_scene *scene, char **lines, int start, int i);
 int				set_player_position(t_scene *scene, int x, int y, char dir);
 int				process_map_char(t_scene *scene, char c, int x, int y);
+void			free_partial_map(t_scene *scene, int allocated_rows);
 
 /* Game */
 int				init_game(t_game *game, const char *filename);

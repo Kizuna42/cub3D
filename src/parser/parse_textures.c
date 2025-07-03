@@ -15,7 +15,12 @@
 static int	set_texture_path(char **target, char *path)
 {
 	if (*target)
-		return (error_msg("Duplicate texture definition"), 0);
+	{
+		free(*target);
+		*target = NULL;
+		error_msg("Duplicate texture definition");
+		return (0);
+	}
 	*target = ft_strdup(path);
 	if (!*target)
 		return (error_msg("Memory allocation failed"), 0);

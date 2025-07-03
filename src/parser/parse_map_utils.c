@@ -62,6 +62,23 @@ int	fill_map_line(t_scene *scene, char **lines, int start, int i)
 	return (1);
 }
 
+void	free_partial_map(t_scene *scene, int allocated_rows)
+{
+	int	i;
+
+	if (!scene->map)
+		return ;
+	i = 0;
+	while (i < allocated_rows)
+	{
+		if (scene->map[i])
+			free(scene->map[i]);
+		i++;
+	}
+	free(scene->map);
+	scene->map = NULL;
+}
+
 int	set_player_position(t_scene *scene, int x, int y, char dir)
 {
 	if (scene->player.spawn_dir != 0)

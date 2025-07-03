@@ -29,3 +29,34 @@ int	get_texture_x(t_ray *ray, t_texture *texture)
 		tex_x = texture->width - tex_x - 1;
 	return (tex_x);
 }
+
+int	get_wall_texture_index(t_ray *ray)
+{
+	if (ray->side == 0)
+	{
+		if (ray->ray_dir_x > 0)
+			return (2);
+		else
+			return (3);
+	}
+	else
+	{
+		if (ray->ray_dir_y > 0)
+			return (0);
+		else
+			return (1);
+	}
+}
+
+void	cleanup_textures(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		if (game->scene.textures[i].img)
+			mlx_destroy_image(game->mlx, game->scene.textures[i].img);
+		i++;
+	}
+}
