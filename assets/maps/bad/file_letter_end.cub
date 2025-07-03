@@ -3,6 +3,9 @@ SO textures/test/south.xpm
 WE textures/test/west.xpm
 EA textures/test/east.xpm
 
+F 20,20,20
+C 200,200,200
+
 11111
 10001
 10S01
@@ -17,7 +20,16 @@ EA textures/test/east.xpm
 10001
 11111
 
-F 20,20,20
-C 200,200,200
 
 
+
+
+
+
+
+
+
+
+
+
+1

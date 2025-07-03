@@ -1,13 +1,21 @@
-NO ./assets/textures/north_wall.xpm
-SO ./assets/textures/south_wall.xpm
-WE ./assets/textures/west_wall.xpm
-EA ./assets/textures/east_wall.xpm
+NO textures/test/north.xpm
+SO textures/test/south.xpm
+WE textures/test/west.xpm
+EA textures/test/east.xpm
 
-F 120,85,220
-C 150,255,255
+F 20,20,20
+C 200,200,200
 
-111111
-1S0101
-101001
-1100E1
-111111
+11111
+10001
+10S01
+10001
+10001
+10001
+11E01
+10001
+10001
+10001
+10001
+10001
+11111

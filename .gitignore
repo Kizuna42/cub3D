@@ -2,3 +2,5 @@
 minilibx*
 *.o
 *.a
+.claude/
+CLAUDE.md
