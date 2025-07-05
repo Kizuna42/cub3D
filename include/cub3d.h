@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kishino <kishino@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/03 19:33:09 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/05 17:35:02 by kishino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define ROT_SPEED 0.03
 
 /* Bonus features */
-# define COLLISION_RADIUS 0.35
+# define COLLISION_RADIUS 0.3
 # define MINIMAP_SIZE 200
 # define MINIMAP_SCALE 8.0
 
