@@ -12,17 +12,15 @@
 
 #include "../../include/cub3d.h"
 
-int	get_texture_x(t_ray *ray, t_texture *texture)
+int	get_texture_x(t_ray *ray, t_texture *texture, t_player *player)
 {
 	double	wall_x;
 	int		tex_x;
 
 	if (ray->side == 0)
-		wall_x = (double)ray->map_y + (1 - ray->step_y) / 2.0
-			+ ray->ray_dir_y * ray->perp_wall_dist;
+		wall_x = player->pos.y + ray->ray_dir_y * ray->perp_wall_dist;
 	else
-		wall_x = (double)ray->map_x + (1 - ray->step_x) / 2.0
-			+ ray->ray_dir_x * ray->perp_wall_dist;
+		wall_x = player->pos.x + ray->ray_dir_x * ray->perp_wall_dist;
 	wall_x -= floor(wall_x);
 	tex_x = (int)(wall_x * (double)texture->width);
 	if (ray->side == 0 && ray->ray_dir_x > 0)

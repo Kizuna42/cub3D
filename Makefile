@@ -38,6 +38,7 @@ CORE_SRCS = main.c \
 			parser/parse_map_utils.c \
 			parser/parse_textures.c \
 			parser/parse_colors.c \
+			parser/color_validation.c \
 			parser/validate_map.c \
 			parser/validate_map_utils.c \
 			game/init.c \
