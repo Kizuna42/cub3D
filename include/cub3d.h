@@ -45,7 +45,7 @@
 # define ROT_SPEED 0.03
 
 /* Bonus features */
-# define COLLISION_RADIUS 0.2
+# define COLLISION_RADIUS 0.35
 # define MINIMAP_SIZE 200
 # define MINIMAP_SCALE 8.0
 
