@@ -34,17 +34,19 @@ int	check_collision(t_game *game, double x, double y)
 	double	check_y;
 
 	radius = COLLISION_RADIUS;
-	i = -1;
-	while (++i <= 1)
+	i = -2;
+	while (i <= 2)
 	{
-		j = -1;
-		while (++j <= 1)
+		j = -2;
+		while (j <= 2)
 		{
-			check_x = x + i * radius;
-			check_y = y + j * radius;
+			check_x = x + i * radius * 0.5;
+			check_y = y + j * radius * 0.5;
 			if (is_wall(game, check_x, check_y))
 				return (1);
+			j++;
 		}
+		i++;
 	}
 	return (0);
 }
