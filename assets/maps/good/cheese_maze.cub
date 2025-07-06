@@ -1,7 +1,7 @@
-NO ./assets/textures/north_wall.xpm
-SO ./assets/textures/south_wall.xpm
-WE ./assets/textures/west_wall.xpm
-EA ./assets/textures/east_wall.xpm
+NO ./assets/textures/north_kanji.xpm
+SO ./assets/textures/south_kanji.xpm
+WE ./assets/textures/west_kanji.xpm
+EA ./assets/textures/east_kanji.xpm
 
 F 164,169,20
 C 153,204,255
