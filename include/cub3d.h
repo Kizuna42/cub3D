@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kishino <kishino@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/03 19:33:09 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/05 17:35:02 by kishino          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # define ROT_SPEED 0.03
 
 /* Bonus features */
-# define COLLISION_RADIUS 0.2
+# define COLLISION_RADIUS 0.3
 # define MINIMAP_SIZE 200
 # define MINIMAP_SCALE 8.0
 
@@ -192,7 +192,7 @@ int				load_texture(t_game *game, t_texture *texture, char *path);
 int				load_all_textures(t_game *game);
 unsigned int	get_texture_color(t_texture *texture, int x, int y);
 int				get_wall_texture_index(t_ray *ray);
-int				get_texture_x(t_ray *ray, t_texture *texture);
+int				get_texture_x(t_ray *ray, t_texture *texture, t_player *player);
 void			cleanup_textures(t_game *game);
 
 /* Utils */
@@ -225,5 +225,6 @@ int				validate_required_elements(t_scene *scene);
 int				is_border_position(int x, int y, t_scene *scene);
 int				check_position(int x, int y, t_scene *scene);
 int				validate_player_position(t_scene *scene);
+int				validate_rgb_format_and_parts(char *str, char ***rgb_parts);
 
 #endif

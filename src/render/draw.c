@@ -74,7 +74,8 @@ static void	draw_wall_stripe(t_game *game, t_ray *ray, int x)
 	int	tex_x;
 
 	tex_x = get_texture_x(ray,
-			&game->scene.textures[get_wall_texture_index(ray)]);
+			&game->scene.textures[get_wall_texture_index(ray)],
+			&game->scene.player);
 	draw_texture_column(game, ray, x, tex_x);
 }
 

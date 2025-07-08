@@ -56,17 +56,9 @@ static int	safe_atoi(char *str, int *result)
 static int	parse_rgb_values(char *str, t_color *color)
 {
 	char	**rgb_parts;
-	int		i;
 
-	rgb_parts = ft_split(str, ',');
-	if (!rgb_parts)
-		return (error_msg("Failed to split RGB values"), 0);
-	i = 0;
-	while (rgb_parts[i])
-		i++;
-	if (i != 3)
-		return (ft_free_split(rgb_parts),
-			error_msg("RGB must have exactly 3 values"), 0);
+	if (!validate_rgb_format_and_parts(str, &rgb_parts))
+		return (0);
 	if (!safe_atoi(rgb_parts[0], &color->r)
 		|| !safe_atoi(rgb_parts[1], &color->g)
 		|| !safe_atoi(rgb_parts[2], &color->b))

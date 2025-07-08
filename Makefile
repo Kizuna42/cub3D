@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/07/03 19:33:44 by kizuna           ###   ########.fr        #
+#    Updated: 2025/07/08 17:44:45 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,16 @@ LIB_DIR = lib
 LIBFT_DIR = $(LIB_DIR)/libft
 
 # OS Detection
--UNAME_S := $(shell uname -s)
+UNAME_S := $(shell uname -s)
+
+# MLX configuration based on OS
+ifeq ($(UNAME_S), Darwin)
+	MLX_INCLUDES = -I$(MLX_DIR) -I/opt/X11/include
+	MLX_FLAGS = -L$(MLX_DIR) -lmlx -L/opt/X11/lib -lXext -lX11 -lm -lz
+else
+	MLX_INCLUDES = -I$(MLX_DIR)
+	MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
+endif
 
 # Core source files
 CORE_SRCS = main.c \
@@ -38,6 +47,7 @@ CORE_SRCS = main.c \
 			parser/parse_map_utils.c \
 			parser/parse_textures.c \
 			parser/parse_colors.c \
+			parser/color_validation.c \
 			parser/validate_map.c \
 			parser/validate_map_utils.c \
 			game/init.c \
@@ -62,7 +72,6 @@ SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS)) $(PLATFORM_SRCS)
 OBJS = $(addprefix $(OBJ_DIR)/, $(CORE_SRCS:.c=.o)) $(PLATFORM_SRCS:%.c=$(OBJ_DIR)/%.o)
 MLX_DIR = $(LIB_DIR)/minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
 
 # Libraries
 LIBFT = $(LIBFT_DIR)/libft.a
