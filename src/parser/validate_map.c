@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/03 19:34:09 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:48:17 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	validate_map(t_scene *scene)
 	if (!validate_player_position(scene))
 		return (0);
 	if (!validate_walkable_area(scene))
+		return (0);
+	if (!validate_map_with_flood_fill(scene))
 		return (0);
 	return (1);
 }

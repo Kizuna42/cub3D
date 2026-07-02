@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kishino <kishino@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/05 17:35:02 by kishino          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:47:42 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,5 +226,9 @@ int				is_border_position(int x, int y, t_scene *scene);
 int				check_position(int x, int y, t_scene *scene);
 int				validate_player_position(t_scene *scene);
 int				validate_rgb_format_and_parts(char *str, char ***rgb_parts);
+
+/* Flood fill validation */
+int				validate_map_with_flood_fill(t_scene *scene);
+int				flood_fill_check(t_scene *scene, int x, int y, int **visited);
 
 #endif

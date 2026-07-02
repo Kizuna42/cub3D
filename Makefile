@@ -6,7 +6,7 @@
 #    By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#              #
-#    Updated: 2025/07/08 17:44:45 by kizuna           ###   ########.fr        #
+#    Updated: 2025/07/11 12:50:41 by kizuna           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ CORE_SRCS = main.c \
 			parser/color_validation.c \
 			parser/validate_map.c \
 			parser/validate_map_utils.c \
+			parser/flood_fill.c \
 			game/init.c \
 			game/init_utils.c \
 			game/game_loop.c \

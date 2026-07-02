@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 03:45:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/22 03:40:01 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/11 15:32:35 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ static void	draw_minimap_background(t_game *game)
 	int	y;
 	int	max_x;
 	int	max_y;
+	int	tile_size;
 
-	max_x = game->minimap.x + (game->scene.map_width
-			* (int)game->minimap.scale);
-	max_y = game->minimap.y + (game->scene.map_height
-			* (int)game->minimap.scale);
+	tile_size = (int)game->minimap.scale;
+	max_x = game->minimap.x + (game->scene.map_width * tile_size);
+	max_y = game->minimap.y + (game->scene.map_height * tile_size);
 	if (max_x > game->minimap.x + game->minimap.size)
 		max_x = game->minimap.x + game->minimap.size;
 	if (max_y > game->minimap.y + game->minimap.size)
@@ -76,13 +76,17 @@ static void	draw_minimap_floor(t_game *game)
 	int	pixel_x;
 	int	pixel_y;
 	int	tile_size;
+	int	max_map_x;
+	int	max_map_y;
 
 	tile_size = (int)game->minimap.scale;
+	max_map_x = (game->minimap.size / tile_size);
+	max_map_y = (game->minimap.size / tile_size);
 	map_y = 0;
-	while (map_y < game->scene.map_height)
+	while (map_y < game->scene.map_height && map_y < max_map_y)
 	{
 		map_x = 0;
-		while (map_x < game->scene.map_width)
+		while (map_x < game->scene.map_width && map_x < max_map_x)
 		{
 			if (game->scene.map[map_y][map_x] == '0')
 			{

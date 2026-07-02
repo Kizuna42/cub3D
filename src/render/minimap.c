@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 03:30:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/06/22 03:31:42 by kizuna           ###   ########.fr       */
+/*   Updated: 2025/07/11 15:32:23 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ void	draw_minimap_walls(t_game *game)
 	int	pixel_x;
 	int	pixel_y;
 	int	tile_size;
+	int	max_map_x;
+	int	max_map_y;
 
 	tile_size = (int)game->minimap.scale;
+	max_map_x = (game->minimap.size / tile_size);
+	max_map_y = (game->minimap.size / tile_size);
 	map_y = 0;
-	while (map_y < game->scene.map_height)
+	while (map_y < game->scene.map_height && map_y < max_map_y)
 	{
 		map_x = 0;
-		while (map_x < game->scene.map_width)
+		while (map_x < game->scene.map_width && map_x < max_map_x)
 		{
 			if (game->scene.map[map_y][map_x] == '1')
 			{
@@ -65,8 +69,10 @@ void	draw_minimap_player(t_game *game)
 		j = -game->minimap.player_size;
 		while (j <= game->minimap.player_size)
 		{
-			if (player_x + i >= 0 && player_x + i < WIN_WIDTH
-				&& player_y + j >= 0 && player_y + j < WIN_HEIGHT)
+			if (player_x + i >= game->minimap.x 
+				&& player_x + i < game->minimap.x + game->minimap.size
+				&& player_y + j >= game->minimap.y 
+				&& player_y + j < game->minimap.y + game->minimap.size)
 				put_pixel(game, player_x + i, player_y + j, 0xFF0000);
 			j++;
 		}
