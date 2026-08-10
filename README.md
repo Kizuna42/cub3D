@@ -25,9 +25,9 @@ cub3D reproduces the classic grid-based raycasting technique used by early first
   - requires the ASCII map to be the last element in the file;
   - rejects duplicate texture/color declarations, missing elements, malformed RGB values, and non-`.xpm` texture paths;
   - preserves the map exactly as written (including interior spaces) rather than normalizing it.
-- **Map validation** — every walkable (`0`) tile must have walls (not the map border or open space) on all sides, checked with both a direct neighbor scan and a recursive flood fill from the player's spawn tile, so any oddly-shaped (non-rectangular) maze is accepted as long as it is fully enclosed by `1` walls.
+- **Map validation** — every walkable (`0`, `N`, `S`, `E`, `W`) tile must not touch the map border or open space; walkable tiles may be adjacent to each other. A direct neighbor scan and a recursive flood fill from the player's spawn validate closure, so non-rectangular mazes are accepted when fully enclosed by `1` walls.
 - **Bonus: wall collision** — the player's movement is blocked from entering wall tiles using a small radius check around the target position, so walls cannot be walked through or clipped into.
-- **Bonus: 2D minimap** — a top-left overlay showing the wall layout of the maze and the player's current position, redrawn every frame alongside the 3D view.
+- **Bonus: 2D minimap** — a fixed 200 px top-left overlay showing the map's top-left 25×25-tile slice. The player marker is drawn while the player is inside that slice; both the overlay and marker are redrawn every frame alongside the 3D view.
 - **Explicit error reporting** — any invalid usage or malformed scene file prints `Error` followed by a specific message to `stderr` and exits without crashing (invalid args, unreadable file, bad `.cub`/`.xpm` extension, unclosed map, duplicate declarations, out-of-range RGB values, etc.).
 
 ## Architecture & Implementation
@@ -59,11 +59,11 @@ Collision detection samples several points on a small radius around the player's
 
 ### Platform layer
 
-Key handling and window-close events are routed through a small platform abstraction (`platform_init`/`platform_handle_keypress`/`platform_close_window`) that maps raw X11 keycodes to the engine's own key constants, keeping the rendering/game logic independent of the windowing backend's raw event codes.
+Key handling is routed through a small platform abstraction (`platform_init`/`platform_handle_keypress`) that maps raw X11 keycodes to the engine's own key constants. The MinilibX window-close event is registered directly to `close_window()` in `src/main.c`.
 
 ### Repository layout
 
-```
+```text
 src/
   parser/   .cub scene file parsing and validation (textures, colors, map, flood fill)
   game/     game loop, initialization, movement, cleanup
