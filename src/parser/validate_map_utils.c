@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 23:45:00 by kizuna            #+#    #+#             */
-/*   Updated: 2025/07/11 12:50:24 by kizuna           ###   ########.fr       */
+/*   Updated: 2026/11/12 12:00:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,6 @@ int	is_border_position(int x, int y, t_scene *scene)
 {
 	return (x == 0 || y == 0 || x == scene->map_width - 1
 		|| y == scene->map_height - 1);
-}
-
-int	check_position(int x, int y, t_scene *scene)
-{
-	if (x < 0 || y < 0 || x >= scene->map_width || y >= scene->map_height)
-		return (0);
-	if (scene->map[y][x] == ' ')
-		return (0);
-	return (1);
 }
 
 int	validate_player_position(t_scene *scene)

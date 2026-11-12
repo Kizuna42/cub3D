@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 03:30:56 by kizuna           ###   ########.fr       */
+/*   Updated: 2026/11/12 12:00:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ int	fill_map_line(t_scene *scene, char **lines, int start, int i)
 {
 	int	j;
 	int	max_width;
+	int	len;
 
 	max_width = scene->map_width;
+	len = (int)ft_strlen(lines[start + i]);
 	j = 0;
 	while (j < max_width)
 	{
-		if (j < (int)ft_strlen(lines[start + i]))
+		if (j < len)
 		{
 			if (!process_map_char(scene, lines[start + i][j], j, i))
 				return (0);
