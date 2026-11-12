@@ -122,7 +122,7 @@ Example, using one of the sample maps shipped in this repository:
 
 ### Tests
 
-`tests/run_map_tests.sh` checks that every map in `assets/maps/bad/` is rejected with `Error` (under `valgrind` when it is installed, failing on leaks) and that every map in `assets/maps/good/` starts and keeps running. The good maps need an X display, so run it under `xvfb-run` on a headless machine:
+`tests/run_map_tests.sh` checks that every map in `assets/maps/bad/` is rejected by the parser with `Error` (under `valgrind` when it is installed, failing on leaks; a bad map that is still running after `BAD_TIMEOUT` seconds or that fails only at window creation counts as wrongly accepted) and that every map in `assets/maps/good/` starts and keeps running. The good maps need an X display, so run it under `xvfb-run` on a headless machine:
 
 ```sh
 make

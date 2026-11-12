@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # Map validation tests for cub3D.
-#  - Every map in assets/maps/bad must be rejected with "Error\n" on stderr
-#    and a non-zero exit status (checked with valgrind for leaks if available).
+#  - Every map in assets/maps/bad must be rejected by the parser with
+#    "Error\n" on stderr and a non-zero exit status (checked with valgrind for
+#    leaks if available). A bad map that is still running after BAD_TIMEOUT
+#    seconds (it was accepted and opened a window) or that only fails because
+#    the window could not be opened (it was accepted by the parser) is a FAIL.
 #  - Every map in assets/maps/good must start and keep running until the
 #    timeout (requires an X display, e.g. run under xvfb-run).
 # Usage: tests/run_map_tests.sh [path/to/cub3D]
@@ -9,6 +12,7 @@
 set -u
 BIN="${1:-./cub3D}"
 TIMEOUT="${TIMEOUT:-3}"
+BAD_TIMEOUT="${BAD_TIMEOUT:-30}"
 fail=0
 pass=0
 
@@ -33,17 +37,22 @@ report() {
 }
 
 for map in assets/maps/bad/*; do
-	err=$($VALGRIND "$BIN" "$map" 2>&1 >/dev/null)
+	err=$(timeout -k 5 "$BAD_TIMEOUT" $VALGRIND "$BIN" "$map" 2>&1 >/dev/null)
 	status=$?
-	if [ "$status" -eq 42 ]; then
+	reason=$(printf '%s\n' "$err" | sed -n 2p)
+	if [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; then
+		report ng "$map" "accepted an invalid map (still running after ${BAD_TIMEOUT}s)"
+	elif [ "$status" -eq 42 ]; then
 		report ng "$map" "memory error/leak detected"
 		echo "$err" | sed 's/^/        /'
 	elif [ "$status" -eq 0 ]; then
 		report ng "$map" "accepted an invalid map"
 	elif [ "$(printf '%s\n' "$err" | head -n 1)" != "Error" ]; then
 		report ng "$map" "stderr does not start with 'Error'"
+	elif [ "$reason" = "Platform initialization failed" ]; then
+		report ng "$map" "accepted an invalid map (passed the parser, failed only at window creation)"
 	else
-		report ok "$map ($(printf '%s\n' "$err" | sed -n 2p))"
+		report ok "$map ($reason)"
 	fi
 done
 

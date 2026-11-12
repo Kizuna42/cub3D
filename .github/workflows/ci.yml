@@ -11,6 +11,7 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +30,7 @@ jobs:
         run: make | grep -q "Nothing to be done"
 
       - name: Map tests
+        timeout-minutes: 10
         run: xvfb-run -a tests/run_map_tests.sh
 
   norminette:
