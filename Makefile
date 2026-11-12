@@ -22,6 +22,7 @@ INCLUDES = -I./include -I./lib/libft
 SRC_DIR = src
 OBJ_DIR = obj
 INCLUDE_DIR = include
+HEADERS = $(INCLUDE_DIR)/cub3d.h $(INCLUDE_DIR)/keycodes.h
 LIB_DIR = lib
 LIBFT_DIR = $(LIB_DIR)/libft
 
@@ -52,8 +53,6 @@ CORE_SRCS = main.c \
 			parser/validate_map_utils.c \
 			parser/flood_fill.c \
 			game/init.c \
-			game/init_utils.c \
-			game/game_loop.c \
 			game/movement.c \
 			game/movement_utils.c \
 			game/cleanup.c \
@@ -94,13 +93,13 @@ $(NAME): $(LIBFT) $(MLX_LIB) $(OBJS)
 	@echo "$(GREEN)✓ $(NAME) created successfully!$(RESET)"
 
 # Compile core source files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)
 	@echo "$(YELLOW)Compiling $<...$(RESET)"
 	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDES) -c $< -o $@
 
 # Compile platform-specific files
-$(OBJ_DIR)/platform/%.o: platform/%.c
+$(OBJ_DIR)/platform/%.o: platform/%.c $(HEADERS)
 	@mkdir -p $(dir $@)
 	@echo "$(YELLOW)Compiling $<...$(RESET)"
 	@$(CC) $(CFLAGS) $(INCLUDES) $(MLX_INCLUDES) -c $< -o $@

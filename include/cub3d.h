@@ -180,7 +180,6 @@ void			cleanup_game(t_game *game);
 void			cleanup_texture_paths(t_scene *scene);
 void			cleanup_map(t_scene *scene);
 void			handle_movement(t_game *game);
-int				game_loop(t_game *game);
 
 /* Rendering */
 void			render_frame(t_game *game);
@@ -216,9 +215,8 @@ int				platform_close_window(t_game *game);
 int				check_collision(t_game *game, double x, double y);
 void			init_minimap(t_game *game);
 void			draw_minimap(t_game *game);
-void			draw_minimap_walls(t_game *game);
+void			draw_minimap_tiles(t_game *game, char tile, int color);
 void			draw_minimap_player(t_game *game);
-void			draw_minimap_square(t_game *game, int x, int y, int size);
 void			draw_minimap_square_color(t_game *game, int x, int y,
 					int color);
 
