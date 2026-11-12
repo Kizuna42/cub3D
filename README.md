@@ -22,7 +22,8 @@ cub3D reproduces the classic grid-based raycasting technique used by early first
 - **Smooth window management** — rendering runs through MinilibX's loop hook, so the window keeps updating correctly across focus changes, minimizing, etc.
 - **`.cub` scene parser** — a two-pass parser that:
   - accepts texture (`NO`, `SO`, `WE`, `EA`) and color (`F`, `C`) declarations in any order, separated by one or more blank/whitespace lines;
-  - requires the ASCII map to be the last element in the file;
+  - requires the ASCII map to be the last element in the file, with no empty lines inside the map;
+  - rejects any line before the map that is not one of the six known identifiers;
   - rejects duplicate texture/color declarations, missing elements, malformed RGB values, and non-`.xpm` texture paths;
   - preserves the map exactly as written (including interior spaces) rather than normalizing it.
 - **Map validation** — every walkable (`0`, `N`, `S`, `E`, `W`) tile must not touch the map border or open space; walkable tiles may be adjacent to each other. A direct neighbor scan and a recursive flood fill from the player's spawn validate closure, so non-rectangular mazes are accepted when fully enclosed by `1` walls.
@@ -66,7 +67,7 @@ Key handling is routed through a small platform abstraction (`platform_init`/`pl
 ```text
 src/
   parser/   .cub scene file parsing and validation (textures, colors, map, flood fill)
-  game/     game loop, initialization, movement, cleanup
+  game/     initialization, movement, collision, cleanup
   render/   raycasting, wall/floor/ceiling drawing, texture sampling, minimap
   utils/    error reporting and small math/libft helpers
 platform/linux/   MinilibX/X11 event hooks and window lifecycle
@@ -75,6 +76,8 @@ lib/libft/        custom libc-style helper library
 lib/minilibx-linux/   MinilibX graphics library (git submodule)
 assets/maps/      sample .cub scene files (valid and intentionally invalid, for testing)
 assets/textures/  sample .xpm wall textures
+tests/            map validation test script
+.github/workflows/  CI (build, norminette, map tests)
 ```
 
 ## Build & Usage
@@ -116,6 +119,17 @@ Example, using one of the sample maps shipped in this repository:
 ```sh
 ./cub3D assets/maps/test.cub
 ```
+
+### Tests
+
+`tests/run_map_tests.sh` checks that every map in `assets/maps/bad/` is rejected with `Error` (under `valgrind` when it is installed, failing on leaks) and that every map in `assets/maps/good/` starts and keeps running. The good maps need an X display, so run it under `xvfb-run` on a headless machine:
+
+```sh
+make
+xvfb-run -a tests/run_map_tests.sh        # or just tests/run_map_tests.sh on a desktop
+```
+
+The same checks, plus `norminette`, run in GitHub Actions on every push and pull request.
 
 ### Controls
 
