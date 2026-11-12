@@ -26,7 +26,7 @@ cub3D reproduces the classic grid-based raycasting technique used by early first
   - rejects any line before the map that is not one of the six known identifiers;
   - rejects duplicate texture/color declarations, missing elements, malformed RGB values, and non-`.xpm` texture paths;
   - preserves the map exactly as written (including interior spaces) rather than normalizing it.
-- **Map validation** — every walkable (`0`, `N`, `S`, `E`, `W`) tile must not touch the map border or open space; walkable tiles may be adjacent to each other. A direct neighbor scan and a recursive flood fill from the player's spawn validate closure, so non-rectangular mazes are accepted when fully enclosed by `1` walls.
+- **Map validation** — every walkable (`0`, `N`, `S`, `E`, `W`) tile must not touch the map border or open space; walkable tiles may be adjacent to each other. An iterative flood fill (explicit stack on the heap, so very large maps cannot overflow the call stack) visits every region of walkable tiles and validates closure, so non-rectangular mazes are accepted when fully enclosed by `1` walls.
 - **Bonus: wall collision** — the player's movement is blocked from entering wall tiles using a small radius check around the target position, so walls cannot be walked through or clipped into.
 - **Bonus: 2D minimap** — a fixed 200 px top-left overlay showing the map's top-left 25×25-tile slice. The player marker is drawn while the player is inside that slice; both the overlay and marker are redrawn every frame alongside the 3D view.
 - **Explicit error reporting** — any invalid usage or malformed scene file prints `Error` followed by a specific message to `stderr` and exits without crashing (invalid args, unreadable file, bad `.cub`/`.xpm` extension, unclosed map, duplicate declarations, out-of-range RGB values, etc.).
@@ -52,7 +52,7 @@ The hit `side` (x-axis vs. y-axis) together with the ray's direction determines 
 
 ### Map parsing
 
-Parsing is two-phase: the parser first walks the file collecting texture/color declarations (in any order, allowing blank-line separation), then locates and parses the trailing map block. The map array is validated for closure using both a per-tile neighbor check and a recursive flood fill from the player's spawn position, so it correctly accepts non-rectangular, arbitrarily shaped mazes as long as they're fully enclosed by walls.
+Parsing is two-phase: the parser first walks the file collecting texture/color declarations (in any order, allowing blank-line separation), then locates and parses the trailing map block. The map array is validated for closure by a single iterative flood fill (heap-allocated stack, no recursion) that covers every region of walkable tiles, including ones not reachable from the spawn, so it correctly accepts non-rectangular, arbitrarily shaped mazes as long as they're fully enclosed by walls.
 
 ### Movement and collision
 
@@ -122,7 +122,7 @@ Example, using one of the sample maps shipped in this repository:
 
 ### Tests
 
-`tests/run_map_tests.sh` checks that every map in `assets/maps/bad/` is rejected by the parser with `Error` (under `valgrind` when it is installed, failing on leaks; a bad map that is still running after `BAD_TIMEOUT` seconds or that fails only at window creation counts as wrongly accepted) and that every map in `assets/maps/good/` starts and keeps running. It needs GNU `timeout` (on macOS install it with `brew install coreutils`, which provides `gtimeout`; `valgrind` is optional). The good maps need an X display, so run it under `xvfb-run` on a headless machine:
+`tests/run_map_tests.sh` checks that every map in `assets/maps/bad/` is rejected by the parser with `Error` (under `valgrind` when it is installed, failing on leaks; a bad map that is still running after `BAD_TIMEOUT` seconds or that fails only at window creation counts as wrongly accepted) and that every map in `assets/maps/good/` starts and keeps running. It also generates a huge open map and a huge closed map (`BIG_SIZE` x `BIG_SIZE`, default 1000x1000) in a temporary directory and tests them the same way, to make sure the closure check does not overflow the stack. It needs GNU `timeout` (on macOS install it with `brew install coreutils`, which provides `gtimeout`; `valgrind` is optional). The good maps need an X display, so run it under `xvfb-run` on a headless machine:
 
 ```sh
 make
@@ -144,5 +144,6 @@ The same checks, plus `norminette`, run in GitHub Actions on every push and pull
 ## Notes
 
 - No screenshots are included in this README; refer to the sample scene files under `assets/maps/` to try the renderer directly.
-- `assets/maps/good/`, `assets/maps/bad/`, and `assets/maps/reference/` contain sample `.cub` files used to exercise both valid maze layouts and the parser's error handling.
+- `assets/maps/good/` and `assets/maps/bad/` contain the sample `.cub` files used by `tests/run_map_tests.sh` to exercise both valid maze layouts and the parser's error handling.
+- `assets/maps/reference/` is not used by the automated tests. It is a small set of reference maps kept for manual checks (e.g. during a defence): `square_map.cub`, `test_map.cub`, `test_whitespace.cub`, and `works.cub` are valid, while `color_missing.cub`, `color_none.cub`, `file_letter_end.cub`, `forbidden.cub`, and `test_map_hole.cub` must be rejected with `Error`. Several of them are copies of maps in `good/` or `bad/`.
 - `subject.txt` and `evaluation.txt` in the repository root are the original 42 School project subject and evaluation checklist.

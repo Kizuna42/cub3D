@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/12 00:00:00 by kizuna            #+#    #+#             */
-/*   Updated: 2026/11/12 00:00:00 by kizuna           ###   ########.fr       */
+/*   Updated: 2026/11/12 12:00:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,11 @@ char	**split_lines(const char *content)
 	while (i < count)
 	{
 		len = line_length(content);
-		lines[i] = ft_substr(content, 0, len);
+		lines[i] = malloc(len + 1);
 		if (!lines[i])
 			return (ft_free_split(lines), NULL);
+		ft_memcpy(lines[i], content, len);
+		lines[i][len] = '\0';
 		content += len;
 		if (*content == '\n')
 			content++;

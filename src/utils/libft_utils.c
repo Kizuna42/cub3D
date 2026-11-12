@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/06/22 00:29:39 by kizuna           ###   ########.fr       */
+/*   Updated: 2026/11/12 12:00:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ char	*read_entire_file(int fd)
 	content = ft_strdup("");
 	if (!content)
 		return (NULL);
-	buffer = malloc(1024);
+	buffer = malloc(READ_BUFFER_SIZE + 1);
 	if (!buffer)
 		return (free(content), NULL);
-	bytes_read = read(fd, buffer, 1023);
+	bytes_read = read(fd, buffer, READ_BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
 		buffer[bytes_read] = '\0';
@@ -65,7 +65,7 @@ char	*read_entire_file(int fd)
 		if (!temp)
 			return (free(buffer), NULL);
 		content = temp;
-		bytes_read = read(fd, buffer, 1023);
+		bytes_read = read(fd, buffer, READ_BUFFER_SIZE);
 	}
 	free(buffer);
 	return (content);

@@ -6,7 +6,7 @@
 /*   By: kizuna <kizuna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by KIZUNA            #+#    #+#             */
-/*   Updated: 2025/07/11 12:47:42 by kizuna           ###   ########.fr       */
+/*   Updated: 2026/11/12 12:00:00 by kizuna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define WIN_HEIGHT 768
 # define WINDOW_WIDTH 1024
 # define WINDOW_HEIGHT 768
+# define READ_BUFFER_SIZE 65536
 # define WIN_TITLE "cub3D"
 
 /* Math constants */
@@ -133,6 +134,15 @@ typedef struct s_scene
 	int				has_ceiling;
 }	t_scene;
 
+/* Flood fill state for the map closure check */
+typedef struct s_fill
+{
+	t_scene	*scene;
+	char	*visited;
+	size_t	*stack;
+	size_t	top;
+}	t_fill;
+
 /* Main game structure */
 typedef struct s_game
 {
@@ -223,12 +233,10 @@ void			draw_minimap_square_color(t_game *game, int x, int y,
 /* Validation utilities */
 int				validate_required_elements(t_scene *scene);
 int				is_border_position(int x, int y, t_scene *scene);
-int				check_position(int x, int y, t_scene *scene);
 int				validate_player_position(t_scene *scene);
 int				validate_rgb_format_and_parts(char *str, char ***rgb_parts);
 
 /* Flood fill validation */
-int				validate_map_with_flood_fill(t_scene *scene);
-int				flood_fill_check(t_scene *scene, int x, int y, int **visited);
+int				validate_map_closed(t_scene *scene);
 
 #endif
