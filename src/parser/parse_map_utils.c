@@ -17,7 +17,7 @@ int	count_map_lines(char **lines, int start)
 	int	count;
 
 	count = 0;
-	while (lines[start + count])
+	while (lines[start + count] && !is_empty_line(lines[start + count]))
 		count++;
 	return (count);
 }

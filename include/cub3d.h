@@ -157,6 +157,8 @@ int				parse_texture_line(char *line, t_scene *scene);
 int				parse_map_data(char **lines, t_scene *scene, int start_line);
 int				validate_map(t_scene *scene);
 char			*read_entire_file(int fd);
+char			**split_lines(const char *content);
+int				is_empty_line(char *line);
 void			ft_free_split(char **split);
 int				is_texture_line(char *line);
 int				is_color_line(char *line);

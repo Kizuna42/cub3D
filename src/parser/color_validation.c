@@ -58,9 +58,13 @@ int	validate_rgb_format_and_parts(char *str, char ***rgb_parts)
 	i = 0;
 	while ((*rgb_parts)[i])
 		i++;
-	if (i != 3)
-		return (error_msg("RGB must have exactly 3 values"), 0);
-	if (!validate_trimmed_parts(*rgb_parts))
+	if (i != 3 || !validate_trimmed_parts(*rgb_parts))
+	{
+		ft_free_split(*rgb_parts);
+		*rgb_parts = NULL;
+		if (i != 3)
+			return (error_msg("RGB must have exactly 3 values"), 0);
 		return (error_msg("Empty RGB value found"), 0);
+	}
 	return (1);
 }

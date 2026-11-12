@@ -66,7 +66,8 @@ CORE_SRCS = main.c \
 			render/minimap_utils.c \
 			utils/error.c \
 			utils/math.c \
-			utils/libft_utils.c
+			utils/libft_utils.c \
+			utils/split_lines.c
 
 PLATFORM_SRCS = platform/linux/platform_hooks.c platform/linux/platform_init.c platform/linux/platform_close.c
 SRCS = $(addprefix $(SRC_DIR)/, $(CORE_SRCS)) $(PLATFORM_SRCS)
