@@ -87,4 +87,4 @@ int	validate_map_with_flood_fill(t_scene *scene)
 	if (!result)
 		return (error_msg("Map not closed by walls (flood fill check)"), 0);
 	return (1);
-} 
+}

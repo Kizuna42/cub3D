@@ -84,7 +84,6 @@ void	render_frame(t_game *game)
 	int		x;
 	t_ray	ray;
 
-	mlx_clear_window(game->mlx, game->win);
 	draw_floor_ceiling(game);
 	x = 0;
 	while (x < WINDOW_WIDTH)

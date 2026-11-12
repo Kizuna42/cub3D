@@ -24,21 +24,22 @@ void	draw_texture_column(t_game *game, t_ray *ray, int x, int tex_x)
 {
 	int			y;
 	int			tex_y;
-	int			color;
 	double		step;
 	double		tex_pos;
+	t_texture	*texture;
 
-	init_texture_params(ray, &game->scene.textures[get_wall_texture_index(
-			ray)], &step, &tex_pos);
+	texture = &game->scene.textures[get_wall_texture_index(ray)];
+	init_texture_params(ray, texture, &step, &tex_pos);
 	y = ray->draw_start;
-	while (y < ray->draw_end)
+	while (y <= ray->draw_end)
 	{
-		tex_y = (int)tex_pos & (game->scene.textures[get_wall_texture_index(
-					ray)].height - 1);
+		tex_y = (int)tex_pos;
+		if (tex_y < 0)
+			tex_y = 0;
+		if (tex_y >= texture->height)
+			tex_y = texture->height - 1;
 		tex_pos += step;
-		color = get_texture_color(&game->scene.textures[get_wall_texture_index(
-					ray)], tex_x, tex_y);
-		put_pixel(game, x, y, color);
+		put_pixel(game, x, y, get_texture_color(texture, tex_x, tex_y));
 		y++;
 	}
 }

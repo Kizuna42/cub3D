@@ -21,35 +21,37 @@ void	init_minimap(t_game *game)
 	game->minimap.player_size = 4;
 }
 
-void	draw_minimap_walls(t_game *game)
+void	draw_minimap_tiles(t_game *game, char tile, int color)
 {
 	int	map_x;
 	int	map_y;
-	int	pixel_x;
-	int	pixel_y;
 	int	tile_size;
-	int	max_map_x;
-	int	max_map_y;
+	int	max_tiles;
 
 	tile_size = (int)game->minimap.scale;
-	max_map_x = (game->minimap.size / tile_size);
-	max_map_y = (game->minimap.size / tile_size);
+	max_tiles = game->minimap.size / tile_size;
 	map_y = 0;
-	while (map_y < game->scene.map_height && map_y < max_map_y)
+	while (map_y < game->scene.map_height && map_y < max_tiles)
 	{
 		map_x = 0;
-		while (map_x < game->scene.map_width && map_x < max_map_x)
+		while (map_x < game->scene.map_width && map_x < max_tiles)
 		{
-			if (game->scene.map[map_y][map_x] == '1')
-			{
-				pixel_x = game->minimap.x + (map_x * tile_size);
-				pixel_y = game->minimap.y + (map_y * tile_size);
-				draw_minimap_square(game, pixel_x, pixel_y, tile_size);
-			}
+			if (game->scene.map[map_y][map_x] == tile)
+				draw_minimap_square_color(game,
+					game->minimap.x + map_x * tile_size,
+					game->minimap.y + map_y * tile_size, color);
 			map_x++;
 		}
 		map_y++;
 	}
+}
+
+static int	is_inside_minimap(t_game *game, int x, int y)
+{
+	return (x >= game->minimap.x
+		&& x < game->minimap.x + game->minimap.size
+		&& y >= game->minimap.y
+		&& y < game->minimap.y + game->minimap.size);
 }
 
 void	draw_minimap_player(t_game *game)
@@ -69,10 +71,7 @@ void	draw_minimap_player(t_game *game)
 		j = -game->minimap.player_size;
 		while (j <= game->minimap.player_size)
 		{
-			if (player_x + i >= game->minimap.x 
-				&& player_x + i < game->minimap.x + game->minimap.size
-				&& player_y + j >= game->minimap.y 
-				&& player_y + j < game->minimap.y + game->minimap.size)
+			if (is_inside_minimap(game, player_x + i, player_y + j))
 				put_pixel(game, player_x + i, player_y + j, 0xFF0000);
 			j++;
 		}

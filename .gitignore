@@ -3,3 +3,5 @@
 *.a
 .claude/
 CLAUDE.md
+cub3D
+obj/

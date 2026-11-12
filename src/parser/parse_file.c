@@ -27,6 +27,11 @@ int	process_config_line(char *line, t_scene *scene)
 		result = parse_texture_line(trimmed, scene);
 	else if (is_color_line(trimmed))
 		result = parse_color_line(trimmed, scene);
+	else
+	{
+		error_msg("Invalid identifier in scene description");
+		result = 0;
+	}
 	free(trimmed);
 	return (result);
 }
@@ -80,7 +85,7 @@ int	parse_file(const char *filename, t_scene *scene)
 	close(fd);
 	if (!file_content)
 		return (error_msg("Cannot read file"), 0);
-	lines = ft_split(file_content, '\n');
+	lines = split_lines(file_content);
 	free(file_content);
 	if (!lines)
 		return (error_msg("Cannot split file content"), 0);

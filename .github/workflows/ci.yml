@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libx11-dev libxext-dev zlib1g-dev xvfb valgrind
+
+      - name: Build
+        run: make
+
+      - name: Check no relink
+        run: make | grep -q "Nothing to be done"
+
+      - name: Map tests
+        run: xvfb-run -a tests/run_map_tests.sh
+
+  norminette:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install norminette
+        run: pip install norminette
+      - name: Run norminette
+        run: norminette src include platform lib/libft

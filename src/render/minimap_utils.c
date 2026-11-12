@@ -34,12 +34,6 @@ void	draw_minimap_square_color(t_game *game, int x, int y, int color)
 	}
 }
 
-void	draw_minimap_square(t_game *game, int x, int y, int size)
-{
-	(void)size;
-	draw_minimap_square_color(game, x, y, 0xFFFFFF);
-}
-
 static void	draw_minimap_background(t_game *game)
 {
 	int	x;
@@ -69,41 +63,10 @@ static void	draw_minimap_background(t_game *game)
 	}
 }
 
-static void	draw_minimap_floor(t_game *game)
-{
-	int	map_x;
-	int	map_y;
-	int	pixel_x;
-	int	pixel_y;
-	int	tile_size;
-	int	max_map_x;
-	int	max_map_y;
-
-	tile_size = (int)game->minimap.scale;
-	max_map_x = (game->minimap.size / tile_size);
-	max_map_y = (game->minimap.size / tile_size);
-	map_y = 0;
-	while (map_y < game->scene.map_height && map_y < max_map_y)
-	{
-		map_x = 0;
-		while (map_x < game->scene.map_width && map_x < max_map_x)
-		{
-			if (game->scene.map[map_y][map_x] == '0')
-			{
-				pixel_x = game->minimap.x + (map_x * tile_size);
-				pixel_y = game->minimap.y + (map_y * tile_size);
-				draw_minimap_square_color(game, pixel_x, pixel_y, 0x404040);
-			}
-			map_x++;
-		}
-		map_y++;
-	}
-}
-
 void	draw_minimap(t_game *game)
 {
 	draw_minimap_background(game);
-	draw_minimap_floor(game);
-	draw_minimap_walls(game);
+	draw_minimap_tiles(game, '0', 0x404040);
+	draw_minimap_tiles(game, '1', 0xFFFFFF);
 	draw_minimap_player(game);
 }
