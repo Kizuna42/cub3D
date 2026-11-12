@@ -7,6 +7,8 @@
 #    the window could not be opened (it was accepted by the parser) is a FAIL.
 #  - Every map in assets/maps/good must start and keep running until the
 #    timeout (requires an X display, e.g. run under xvfb-run).
+# Requires GNU timeout (on macOS: `brew install coreutils`, which provides
+# gtimeout).
 # Usage: tests/run_map_tests.sh [path/to/cub3D]
 
 set -u
@@ -18,6 +20,16 @@ pass=0
 
 if [ ! -x "$BIN" ]; then
 	echo "binary not found: $BIN" >&2
+	exit 2
+fi
+
+if command -v timeout >/dev/null 2>&1; then
+	TIMEOUT_CMD=timeout
+elif command -v gtimeout >/dev/null 2>&1; then
+	TIMEOUT_CMD=gtimeout
+else
+	echo "GNU timeout not found (needed to stop wrongly accepted maps)." >&2
+	echo "Install coreutils (macOS: brew install coreutils)." >&2
 	exit 2
 fi
 
@@ -37,7 +49,7 @@ report() {
 }
 
 for map in assets/maps/bad/*; do
-	err=$(timeout -k 5 "$BAD_TIMEOUT" $VALGRIND "$BIN" "$map" 2>&1 >/dev/null)
+	err=$("$TIMEOUT_CMD" -k 5 "$BAD_TIMEOUT" $VALGRIND "$BIN" "$map" 2>&1 >/dev/null)
 	status=$?
 	reason=$(printf '%s\n' "$err" | sed -n 2p)
 	if [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; then
@@ -58,7 +70,7 @@ done
 
 if [ -n "${DISPLAY:-}" ]; then
 	for map in assets/maps/good/*.cub; do
-		out=$(timeout "$TIMEOUT" "$BIN" "$map" 2>&1)
+		out=$("$TIMEOUT_CMD" "$TIMEOUT" "$BIN" "$map" 2>&1)
 		status=$?
 		if [ "$status" -eq 124 ]; then
 			report ok "$map"
